@@ -727,6 +727,9 @@ if ($action === 'save_block') {
                     'Abrir calendario'
                 );
                 $mailSent = calendar_api_send_mail($to, 'Bloque liberado en sala de computación', $bodies['plain'], $bodies['html']);
+                if ($mailSent) {
+                    $result['mail_notice'] = 'Correo tipo "bloque liberado" enviado al docente que tenía la reserva.';
+                }
             }
         } elseif (!empty($result['reservation'])) {
             $r = $result['reservation'];
@@ -743,6 +746,11 @@ if ($action === 'save_block') {
                     'Reserva de bloque — sala de computación',
                     $intro
                 );
+                if ($mailSent) {
+                    $result['mail_notice'] = (strpos((string) ($result['message'] ?? ''), 'actualizado') !== false)
+                        ? 'Correo de confirmación "reserva actualizada" enviado a tu casilla.'
+                        : 'Correo de confirmación "bloque reservado" enviado a tu casilla.';
+                }
             }
         }
         $result['mail_sent'] = $mailSent;
@@ -826,11 +834,15 @@ if ($action === 'request_block_change') {
         $req = $result['request'];
         $ownerEmail = admin_normalize_email((string) ($req['owner_email'] ?? ''));
         if ($ownerEmail !== '') {
-            $result['mail_sent'] = calendar_api_send_block_change_request_notice(
+            $sent = calendar_api_send_block_change_request_notice(
                 $ownerEmail,
                 (string) ($req['owner_name'] ?? $ownerEmail),
                 $req
             );
+            $result['mail_sent'] = $sent;
+            if ($sent) {
+                $result['mail_notice'] = 'Correo tipo "solicitud de cambio de bloque" enviado al propietario de la reserva.';
+            }
         } else {
             $result['mail_sent'] = false;
         }
@@ -906,7 +918,14 @@ if ($action === 'respond_block_request') {
     $wantsMail = calendar_api_wants_send_email($input);
     $result['send_email_requested'] = $wantsMail;
     if (!empty($result['ok']) && $wantsMail && !empty($result['request'])) {
-        $result['mail_sent'] = calendar_api_send_block_request_result_notice($result['request'], (string) ($result['decision'] ?? ''));
+        $sent = calendar_api_send_block_request_result_notice($result['request'], (string) ($result['decision'] ?? ''));
+        $result['mail_sent'] = $sent;
+        if ($sent) {
+            $dec = (string) ($result['decision'] ?? '');
+            $result['mail_notice'] = $dec === 'approve'
+                ? 'Correo tipo "solicitud aprobada" enviado al docente que solicitó el cambio.'
+                : 'Correo tipo "solicitud rechazada" enviado al docente que solicitó el cambio.';
+        }
     } else {
         $result['mail_sent'] = false;
     }

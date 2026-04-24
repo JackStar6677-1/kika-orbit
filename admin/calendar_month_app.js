@@ -80,14 +80,44 @@
         }
         if (data.send_email_requested === true) {
             if (data.mail_sent === true) {
-                return ' Se envió un aviso por correo.';
+                return '';
             }
-            return ' No se pudo enviar el correo (revisa configuración SMTP).';
+            return ' No se pudo enviar el correo (revisa configuración SMTP o carpeta spam).';
         }
         if (data.send_email_requested === false) {
             return ' Aviso por correo desactivado (casilla arriba).';
         }
         return '';
+    }
+
+    function hideMailToast() {
+        var toast = app.querySelector('[data-mail-toast]');
+        if (toast) {
+            toast.classList.remove('is-visible');
+        }
+        if (hideMailToast._timer) {
+            clearTimeout(hideMailToast._timer);
+            hideMailToast._timer = null;
+        }
+    }
+
+    /** Solo si el servidor confirma mail_sent (SMTP OK). */
+    function showMailSuccessToast(data) {
+        if (!data || data.send_email_requested !== true || data.mail_sent !== true) {
+            return;
+        }
+        var toast = app.querySelector('[data-mail-toast]');
+        var textEl = app.querySelector('[data-mail-toast-text]');
+        if (!toast || !textEl) {
+            return;
+        }
+        textEl.textContent = data.mail_notice || 'El servidor confirmó que el aviso por correo se envió correctamente.';
+        if (hideMailToast._timer) {
+            clearTimeout(hideMailToast._timer);
+            hideMailToast._timer = null;
+        }
+        toast.classList.add('is-visible');
+        hideMailToast._timer = setTimeout(hideMailToast, 10000);
     }
 
     function dateKey(date) {
@@ -302,6 +332,12 @@
             '[data-calendar-month-app] .m-warning{padding:8px 10px;border-radius:10px;background:rgba(214,170,67,.18);color:#f5e0b4;font-size:.8rem;border:1px solid rgba(214,170,67,.35)}' +
             '[data-calendar-month-app] .m-modal{position:fixed;inset:0;background:rgba(4,10,20,.72);display:none;align-items:center;justify-content:center;z-index:99}' +
             '[data-calendar-month-app] .m-modal.is-open{display:flex}' +
+            '[data-calendar-month-app] .m-mail-toast{position:fixed;right:20px;bottom:88px;z-index:100;max-width:min(420px,calc(100vw - 36px));transform:translateY(calc(100% + 40px));opacity:0;transition:transform .35s ease,opacity .35s ease;pointer-events:none}' +
+            '[data-calendar-month-app] .m-mail-toast.is-visible{transform:translateY(0);opacity:1;pointer-events:auto}' +
+            '[data-calendar-month-app] .m-mail-toast__card{background:linear-gradient(165deg,rgba(22,52,82,.98),rgba(10,28,48,.98));border:1px solid rgba(123,196,255,.35);border-radius:16px;padding:16px 18px;box-shadow:0 20px 50px rgba(2,8,18,.55);color:#eaf4ff}' +
+            '[data-calendar-month-app] .m-mail-toast__title{display:block;font-size:1rem;font-weight:800;margin:0 0 8px;color:#dffceb}' +
+            '[data-calendar-month-app] .m-mail-toast__text{margin:0 0 12px;font-size:.9rem;line-height:1.45;color:#cfe8ff}' +
+            '[data-calendar-month-app] .m-mail-toast__close{padding:8px 14px;font-size:.85rem}' +
             '[data-calendar-month-app] .m-modal-card{width:min(960px,calc(100% - 24px));max-height:86vh;overflow:auto;background:linear-gradient(165deg,#0f2438,#0a1a2c);border:1px solid rgba(123,196,255,.22);border-radius:14px;padding:15px;color:#eaf4ff}' +
             '[data-calendar-month-app] .m-seat-grid{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:7px}' +
             '[data-calendar-month-app] .m-seat{padding:8px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid rgba(123,196,255,.12);font-size:.74rem;color:#dcebf8}' +
@@ -363,6 +399,13 @@
                 '<div class="m-modal-card">' +
                     '<div class="m-toolbar"><strong>Mapa de 40 puestos</strong><button class="m-btn" data-close-map type="button">Cerrar</button></div>' +
                     '<div data-seat-content></div>' +
+                '</div>' +
+            '</div>' +
+            '<div class="m-mail-toast" data-mail-toast role="status" aria-live="polite" aria-atomic="true">' +
+                '<div class="m-mail-toast__card">' +
+                    '<strong class="m-mail-toast__title">Correo enviado</strong>' +
+                    '<p class="m-mail-toast__text" data-mail-toast-text></p>' +
+                    '<button type="button" class="m-btn m-mail-toast__close" data-close-mail-toast>Cerrar</button>' +
                 '</div>' +
             '</div>';
     }
@@ -643,6 +686,7 @@
         await loadMonth();
         var base = mode === 'request' ? (data.message || 'Solicitud enviada.') : (data.message || 'Bloque actualizado.');
         showStatus(base + mailResultNote(data), 'ok');
+        showMailSuccessToast(data);
     }
 
     async function respondRequest(requestId, decision) {
@@ -659,6 +703,7 @@
         await loadMonth();
         var base = data.message || (decision === 'approve' ? 'Solicitud aprobada.' : 'Solicitud rechazada.');
         showStatus(base + mailResultNote(data), 'ok');
+        showMailSuccessToast(data);
     }
 
     async function saveHolidayRow() {
@@ -779,6 +824,10 @@
 
         if (event.target.closest('[data-close-map]')) {
             app.querySelector('[data-seat-modal]').classList.remove('is-open');
+        }
+
+        if (event.target.closest('[data-close-mail-toast]')) {
+            hideMailToast();
         }
     });
 
