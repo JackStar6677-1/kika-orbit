@@ -202,6 +202,12 @@
         };
     }
 
+    function isWeekendKey(key) {
+        if (!key) return false;
+        var wd = parseDate(key).getDay();
+        return wd === 0 || wd === 6;
+    }
+
     function queryString(params) {
         return Object.keys(params).map(function (key) {
             return encodeURIComponent(key) + '=' + encodeURIComponent(params[key]);
@@ -275,7 +281,7 @@
             '[data-calendar-month-app] .m-day.is-other{opacity:.38}' +
             '[data-calendar-month-app] .m-day.is-selected{outline:2px solid #4da3ff;outline-offset:1px}' +
             '[data-calendar-month-app] .m-day.is-today{border-color:#47cf9a}' +
-            '[data-calendar-month-app] .m-day.is-weekend{background:rgba(44,76,116,.35);border-color:rgba(123,196,255,.12);opacity:.92}' +
+            '[data-calendar-month-app] .m-day.is-weekend{cursor:default;pointer-events:none;background:rgba(44,76,116,.35);border-color:rgba(123,196,255,.12);opacity:.92}' +
             '[data-calendar-month-app] .m-day.is-weekend.is-other{opacity:.32}' +
             '[data-calendar-month-app] .m-day.is-feriado-nacional{border-color:rgba(214,170,67,.75);background:linear-gradient(180deg,rgba(88,60,132,.35),rgba(8,22,40,.88));box-shadow:inset 0 0 0 1px rgba(214,170,67,.45)}' +
             '[data-calendar-month-app] .m-day.is-feriado-interno{border-color:rgba(123,196,255,.55);background:linear-gradient(180deg,rgba(31,99,187,.32),rgba(8,22,40,.9));box-shadow:inset 0 0 0 1px rgba(123,196,255,.25)}' +
@@ -312,11 +318,11 @@
                 '<article class="m-panel m-teacher-panel">' +
                     '<h3>Calendario mensual y avisos</h3>' +
                     '<ul>' +
-                        '<li>Elige sala (Básica o Media), navega el mes y pulsa un día para ver los bloques horarios.</li>' +
+                        '<li>Elige sala (Básica o Media), navega el mes y pulsa un día hábil (lunes a viernes) para ver los bloques horarios.</li>' +
                         '<li><strong>Guardar</strong> reserva el bloque a tu nombre; <strong>Liberar</strong> lo deja disponible.</li>' +
                         '<li>Si el bloque es de otro docente, usa <strong>Solicitar aprobación</strong>; el dueño (o coordinación) verá la solicitud abajo.</li>' +
                         '<li>Los correos salen con remitente de respuesta visible: <strong>' + reply + '</strong> (configuración en administración).</li>' +
-                        '<li><strong>Feriados Chile</strong> y <strong>días especiales</strong> (coordinación) muestran el motivo en la celda; fines de semana van en tono distinto sin texto.</li>' +
+                        '<li><strong>Feriados Chile</strong> y <strong>días especiales</strong> (coordinación) muestran el motivo en la celda; sábados y domingos van en tono distinto, sin texto y no son seleccionables.</li>' +
                     '</ul>' +
                     '<label class="m-mail-label">' +
                         '<input type="checkbox" data-notify-email' + (state.notifyEmail ? ' checked' : '') + '>' +
@@ -345,7 +351,7 @@
                     '</article>' +
                     '<article class="m-panel">' +
                         '<h3 data-day-title>Selecciona un día</h3>' +
-                        '<div data-day-blocks class="m-blocks"><div class="m-help">Haz clic en un día del calendario mensual para ver bloques, recreos y almuerzo.</div></div>' +
+                        '<div data-day-blocks class="m-blocks"><div class="m-help">Haz clic en un día hábil (lunes a viernes) del calendario para ver bloques, recreos y almuerzo.</div></div>' +
                     '</article>' +
                 '</div>' +
                 '<article class="m-panel">' +
@@ -463,11 +469,14 @@
                 (meta.showLabel && meta.source === 'interno' ? ' is-feriado-interno' : '');
             var titleAttr = meta.showLabel ? ' title="' + escapeHtml(meta.label) + '"' : '';
             var labelHtml = meta.showLabel ? '<span class="m-day-holiday-label">' + escapeHtml(meta.label) + '</span>' : '';
-            return '<button type="button" class="' + cls + '" data-date="' + key + '"' + titleAttr + '>' +
+            var inner =
                 '<div class="m-day-top">' + (badge > 0 ? '<span class="m-day-badge">' + badge + '</span>' : '') + '</div>' +
                 '<span class="m-day-num">' + dayInfo.date.getDate() + '</span>' +
-                labelHtml +
-            '</button>';
+                labelHtml;
+            if (meta.isWeekend) {
+                return '<div class="' + cls + '"' + titleAttr + ' role="presentation">' + inner + '</div>';
+            }
+            return '<button type="button" class="' + cls + '" data-date="' + key + '"' + titleAttr + '">' + inner + '</button>';
         }).join('');
     }
 
@@ -492,7 +501,7 @@
         var host = app.querySelector('[data-day-blocks]');
         if (!state.selectedDate) {
             title.textContent = 'Selecciona un día';
-            host.innerHTML = '<div class="m-help">Haz clic en un día del calendario mensual para ver bloques, recreos y almuerzo.</div>';
+            host.innerHTML = '<div class="m-help">Haz clic en un día hábil (lunes a viernes) del calendario para ver bloques, recreos y almuerzo.</div>';
             return;
         }
         var date = parseDate(state.selectedDate);
@@ -608,6 +617,9 @@
         state.canManageHolidays = !!(data.user && data.user.can_manage_holidays);
         state.customHolidays = state.canManageHolidays ? (data.custom_holidays_for_year || {}) : {};
         rebuildHolidayLookup();
+        if (state.selectedDate && isWeekendKey(state.selectedDate)) {
+            state.selectedDate = '';
+        }
         renderRooms();
         renderMonth();
         renderDayPanel();
