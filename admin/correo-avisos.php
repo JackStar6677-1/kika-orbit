@@ -18,14 +18,15 @@ $user = is_array($config) && !empty($config['username']) ? (string) $config['use
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>Correo y avisos | CCG Admin</title>
+    <link rel="stylesheet" href="admin-responsive.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Outfit', system-ui, sans-serif; margin: 0; display: flex; min-height: 100vh; background: linear-gradient(180deg, #070b10 0%, #0c1520 100%); color: #e8f4ff; }
-        .sidebar { width: 260px; background: #0a1a2e; color: #fff; padding: 22px 18px; flex-shrink: 0; border-right: 1px solid rgba(123, 196, 255, 0.12); }
+        body { font-family: 'Outfit', system-ui, sans-serif; margin: 0; display: flex; min-height: 100vh; min-height: 100dvh; background: linear-gradient(180deg, #070b10 0%, #0c1520 100%); color: #e8f4ff; }
+        .sidebar { width: min(260px, 100%); background: #0a1a2e; color: #fff; padding: 22px 18px; flex-shrink: 0; border-right: 1px solid rgba(123, 196, 255, 0.12); }
         .sidebar h2 { margin: 0 0 8px; font-size: 1.15rem; }
         .sidebar-user { font-size: 0.78rem; opacity: 0.75; margin: 0 0 16px; word-break: break-all; }
         .sidebar-divider { border: 0; border-top: 1px solid rgba(255,255,255,0.15); margin: 16px 0; }
@@ -36,7 +37,7 @@ $user = is_array($config) && !empty($config['username']) ? (string) $config['use
         .nav-form { margin-top: 18px; }
         .nav-form button { width: 100%; border: 0; cursor: pointer; text-align: left; font: inherit; }
         .btn-success { background: #0f9d58; color: #fff; }
-        .main { flex: 1; padding: 32px clamp(18px, 3vw, 40px); max-width: min(960px, 100%); }
+        .main { flex: 1; padding: clamp(20px, 4vw, 32px) clamp(16px, 3vw, 40px); max-width: min(60rem, 100%); width: 100%; }
         h1 { color: #fff; margin-top: 0; font-weight: 800; letter-spacing: -0.02em; }
         .panel { background: linear-gradient(165deg, #121c2c, #0c1522); border-radius: 18px; padding: 24px 26px; box-shadow: 0 22px 50px rgba(2, 6, 14, 0.45); border: 1px solid rgba(123, 196, 255, 0.16); }
         .panel p, .panel li { line-height: 1.58; color: rgba(210, 228, 248, 0.9); }

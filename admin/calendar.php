@@ -22,7 +22,7 @@ if (is_file($mail_cfg_path)) {
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
     <title>Calendario Sala de Computación | CCG Admin</title>
     <meta name="theme-color" content="#2C4C74">
     <script>
@@ -67,8 +67,8 @@ if (is_file($mail_cfg_path)) {
             --radius-md: 16px;
             --shadow-lg: 0 24px 48px rgba(44, 76, 116, 0.14);
             --shadow-md: 0 16px 28px rgba(44, 76, 116, 0.09);
-            /* Vista mensual: más ancho para el grilla y el panel lateral */
-            --site-width: min(1680px, calc(100vw - 40px));
+            /* Ancho fluido (rem + viewport), sin tope fijo en px */
+            --site-width: min(96rem, calc(100vw - max(24px, env(safe-area-inset-left, 0px) + env(safe-area-inset-right, 0px))));
         }
 
         :root[data-theme="dark"] {
@@ -102,8 +102,11 @@ if (is_file($mail_cfg_path)) {
         }
 
         .container {
-            width: min(var(--site-width), calc(100% - 32px));
+            width: min(100%, var(--site-width));
+            max-width: 100%;
             margin: 0 auto;
+            padding-left: max(12px, env(safe-area-inset-left, 0px));
+            padding-right: max(12px, env(safe-area-inset-right, 0px));
         }
 
         .site-header {

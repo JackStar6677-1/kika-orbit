@@ -82,8 +82,9 @@ $default_recipient = htmlspecialchars(
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>Prueba SMTP calendario | CCG Admin</title>
+    <link rel="stylesheet" href="admin-responsive.css">
     <meta name="robots" content="noindex,nofollow">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -103,11 +104,12 @@ $default_recipient = htmlspecialchars(
             margin: 0;
             display: flex;
             min-height: 100vh;
+            min-height: 100dvh;
             background: radial-gradient(ellipse 120% 80% at 10% 0%, rgba(30, 72, 120, 0.35), transparent 50%),
                 linear-gradient(180deg, #070b10 0%, #0a1018 45%, #06090e 100%);
             color: var(--ccg-ink);
         }
-        .sidebar { width: 268px; background: #0a1a2e; color: #fff; padding: 22px 18px; flex-shrink: 0; border-right: 1px solid rgba(123, 196, 255, 0.12); }
+        .sidebar { width: min(268px, 100%); background: #0a1a2e; color: #fff; padding: 22px 18px; flex-shrink: 0; border-right: 1px solid rgba(123, 196, 255, 0.12); }
         .sidebar h2 { margin: 0 0 8px; font-size: 1.2rem; }
         .sidebar-user { font-size: 0.78rem; opacity: 0.75; margin: 0 0 16px; word-break: break-all; }
         .sidebar-divider { border: 0; border-top: 1px solid rgba(255,255,255,0.12); margin: 16px 0; }
@@ -122,7 +124,7 @@ $default_recipient = htmlspecialchars(
             flex: 1;
             padding: 28px clamp(18px, 3vw, 40px) 48px;
             width: 100%;
-            max-width: min(1100px, 100%);
+            max-width: min(69rem, 100%);
         }
         h1 { margin: 0 0 12px; font-size: clamp(1.35rem, 2.4vw, 1.75rem); font-weight: 800; letter-spacing: -0.02em; }
         .lead { margin: 0 0 20px; color: var(--ccg-muted); line-height: 1.6; max-width: 75ch; }
