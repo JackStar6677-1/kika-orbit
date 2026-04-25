@@ -1,0 +1,55 @@
+/**
+ * Escudo grande en el hero de la portada (/app/): derecha, sobre la fachada
+ * (sustituye el resplandor de section.hero::after por logo + halo).
+ *
+ * Despliegue: subir este archivo junto a LogoCastelGandolfoSinFondo.png y enlazar
+ * desde el <head> después de site.css, o añadir en site.css:
+ *   @import url("/app/assets/hero-escudo.css");
+ */
+
+section.hero .container {
+  position: relative;
+  z-index: 1;
+}
+
+section.hero::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: clamp(64px, 12vw, 110px) clamp(-72px, -5vw, -80px) auto auto !important;
+  width: clamp(140px, 26vw, 240px) !important;
+  height: clamp(140px, 26vw, 240px) !important;
+  max-width: min(46vw, 260px);
+  max-height: min(46vw, 260px);
+  margin: 0 !important;
+  background-image:
+    url("/app/assets/LogoCastelGandolfoSinFondo.png"),
+    radial-gradient(circle, rgba(214, 170, 67, 0.22) 0%, transparent 68%) !important;
+  background-size: contain, cover !important;
+  background-position: center, center !important;
+  background-repeat: no-repeat, no-repeat !important;
+  filter: drop-shadow(0 14px 32px rgba(0, 0, 0, 0.38));
+  pointer-events: none !important;
+  animation: castelPulse 12s ease-in-out infinite !important;
+  z-index: 0;
+}
+
+html[data-theme="dark"] section.hero::after {
+  background-image:
+    url("/app/assets/LogoCastelGandolfoSinFondo.png"),
+    radial-gradient(
+      circle,
+      rgba(240, 244, 248, 0.42) 0%,
+      rgba(214, 170, 67, 0.14) 42%,
+      transparent 70%
+    ) !important;
+  filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.5));
+}
+
+@media (max-width: 720px) {
+  section.hero::after {
+    inset: 52px -48px auto auto !important;
+    width: clamp(100px, 34vw, 160px) !important;
+    height: clamp(100px, 34vw, 160px) !important;
+    opacity: 0.95;
+  }
+}

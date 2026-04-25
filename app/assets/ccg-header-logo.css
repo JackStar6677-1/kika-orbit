@@ -1,0 +1,53 @@
+@import url("hero-escudo.css");
+
+/**
+ * Fondo claro bajo el escudo PNG (modo oscuro). En el servidor, al final de
+ * `site.css` (una sola vez, afecta todas las páginas que enlazan site.css):
+ *   @import url("ccg-header-logo.css");
+ *
+ * Ese import también carga hero-escudo.css (escudo en el hero de la portada).
+ *
+ * castel-theme.js también inyecta .ccg-escudo-pad; este archivo refuerza por CSS.
+ */
+
+img.ccg-escudo-pad {
+  background: #f0f4f8;
+  border-radius: 14px;
+  padding: 5px 7px;
+  box-sizing: content-box;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25) inset;
+  mix-blend-mode: normal;
+}
+
+html[data-theme="dark"] .site-shell > header img[src*="castelgandolfo"],
+html[data-theme="dark"] .site-shell > header img[src*="CastelGandolfo"],
+html[data-theme="dark"] .site-shell header .site-header__bar .site-logo img,
+html[data-theme="dark"] .site-header .site-header__bar .site-logo img,
+html[data-theme="dark"] .site-header__bar .site-logo img,
+html[data-theme="dark"] .site-header .site-logo img,
+html[data-theme="dark"] a.site-logo > img,
+html[data-theme="dark"] .site-header img[src*="LogoCastelGandolfoSinFondo"],
+html[data-theme="dark"] .site-header img[src*="LogoCastelGandolfo"],
+html[data-theme="dark"] .site-header img[src*="logo-castelgandolfo"],
+html[data-theme="dark"] header .site-topbar a img[src*="castelgandolfo"],
+html[data-theme="dark"] header .site-topbar a img[src*="CastelGandolfo"],
+html[data-theme="dark"] [role="banner"] .container > a:first-of-type > img,
+html[data-theme="dark"] .site-shell > header a:first-of-type > img,
+body[data-theme="dark"] .site-shell > header a:first-of-type > img,
+body[data-theme="dark"] .site-header .site-logo img,
+body[data-theme="dark"] a.site-logo > img,
+html[data-theme="dark"] header a[href*="/app/"] img,
+html[data-theme="dark"] header a[href*="/app/index"] > img,
+html[data-theme="dark"] header a[href*="colegiocastelgandolfo"] img,
+html[data-theme="dark"] .site-topbar a:first-of-type > img,
+html[data-theme="dark"] .site-masthead a:first-of-type > img,
+html[data-theme="dark"] .site-masthead .site-logo img,
+html[data-theme="dark"] .site-masthead img[src*="colegiocastelgandolfo"],
+html[data-theme="dark"] .site-masthead img[src*="CastelGandolfo"] {
+  background: #f0f4f8 !important;
+  border-radius: 14px !important;
+  padding: 5px 7px !important;
+  box-sizing: content-box !important;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25) inset !important;
+  mix-blend-mode: normal !important;
+}
