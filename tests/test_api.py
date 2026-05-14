@@ -65,6 +65,17 @@ def test_chile_holidays_include_irrenunciables() -> None:
     assert {"Anio Nuevo", "Dia del Trabajador", "Independencia Nacional", "Navidad"} <= labels
 
 
+def test_google_integration_status_shape() -> None:
+    with TestClient(app) as client:
+        response = client.get("/api/integrations/google/status")
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["provider"] == "google"
+    assert "configured" in payload
+    assert payload["calendar_scope"] == "https://www.googleapis.com/auth/calendar.events"
+
+
 def test_rut_validation_and_masking() -> None:
     assert normalize_rut("21.452.686-7") == "21452686-7"
     assert is_valid_rut("21452686-7")
