@@ -603,6 +603,120 @@ credenciales del VPS
 
 Si necesitas mostrar configuracion, usa ejemplos sin secretos.
 
+## Cosas que NO estan en GitHub y existen solo localmente
+
+El repo publico no contiene secretos ni datos privados. Si continuas desde otro entorno, revisa o recrea estos archivos locales.
+
+### En el repo local, ignorado por Git
+
+```text
+C:\Users\Jack\Documents\GitHub\Experimentos\Castel\CastelRoomKeeper\.env
+C:\Users\Jack\Documents\GitHub\Experimentos\Castel\CastelRoomKeeper\.local\
+```
+
+Contenido local importante dentro de `.local`:
+
+```text
+.local/admin_roster.json
+.local/google_oauth_client_secret.json
+.local/google_oauth_state.json
+.local/kika_orbit.db
+.local/uvicorn.err.log
+.local/uvicorn.out.log
+```
+
+Que significa cada cosa:
+
+- `.env`: variables reales de entorno para correr la app local, incluyendo OAuth de Google. No imprimir ni subir.
+- `.local/admin_roster.json`: lista local real de administradores/RUT/correos. No versionar.
+- `.local/google_oauth_client_secret.json`: copia local del JSON OAuth descargado desde Google Cloud. No versionar.
+- `.local/google_oauth_state.json`: estado temporal del flujo OAuth local. Se puede regenerar.
+- `.local/kika_orbit.db`: SQLite local de desarrollo. Para produccion debe migrarse a PostgreSQL.
+- `.local/uvicorn.*.log`: logs locales del servidor. No son necesarios para desplegar.
+
+### Archivos locales fuera del repo
+
+Texto original de requerimientos de Kika:
+
+```text
+C:\Users\Jack\Downloads\Proyecto para kika.txt
+```
+
+JSON OAuth original descargado desde Google Cloud:
+
+```text
+C:\Users\Jack\Downloads\client_secret_368948244630-m9vqvg9vv0qik94fqbonaq91taq3u4kr.apps.googleusercontent.com.json
+```
+
+No abrir ni pegar el contenido de ese JSON en respuestas. Solo copiarlo a `.local/google_oauth_client_secret.json` si falta.
+
+### Archivos heredados/privados del calendario Castel ignorados por Git
+
+Estos venian del calendario/base de Castel y estan ignorados para no publicar datos operativos o configuraciones privadas:
+
+```text
+admin/mail_config.php
+data/authorized_emails.json
+data/calendar_store.json
+data/calendar_backend.json
+data/calendar_notices.json
+data/admin_login_locks.json
+data/admin_tools.json
+data/site.json
+```
+
+No asumir que estos deben subirse a GitHub. Si se necesita migrar informacion desde ellos, leerlos localmente, extraer solo estructura/datos permitidos y crear seeds o ejemplos anonimizados.
+
+### Entorno/caches locales
+
+Tambien existen solo localmente y no importan para continuar:
+
+```text
+.venv/
+.pytest_cache/
+.ruff_cache/
+__pycache__/
+*.pyc
+```
+
+### Backups locales relevantes
+
+Hay respaldos locales en:
+
+```text
+C:\Users\Jack\Documents\Backups\
+```
+
+Ejemplos de respaldos recientes:
+
+```text
+KikaOrbit_start_20260514-104949
+KikaOrbit_ui_block_20260514-110000
+KikaOrbit_pwa_holidays_20260514-120000
+KikaOrbit_admin_identity_20260514-130000
+KikaOrbit_google_oauth_20260514-140000
+KikaOrbit_continuidad_20260514-173448
+KikaOrbit_local_only_context_20260514-174101
+```
+
+Usarlos solo como respaldo/consulta. No sincronizarlos completos a GitHub.
+
+### Cloudflare local
+
+Al momento de este traspaso no quedo confirmado un login local de `cloudflared` en:
+
+```text
+C:\Users\Jack\.cloudflared
+```
+
+Si se quiere publicar `kika.drakescraft.cl` hacia `localhost:8000`, probablemente haya que iniciar sesion con:
+
+```powershell
+cloudflared tunnel login
+```
+
+Luego crear o reutilizar el tunnel `kika-orbit`.
+
 ## Ultimo objetivo practico
 
 Dejar Kika Orbit avanzando hacia una PWA/SaaS real, conectada a Google Calendar, con administradores por RUT, feriados chilenos, UI pulida y lista para desplegar en `kika.drakescraft.cl`, ya sea con Cloudflare Tunnel mientras se desarrolla o con un VPS Ubuntu cuando Jack lo compre.
