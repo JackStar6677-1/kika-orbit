@@ -94,11 +94,13 @@ La recomendación es:
 
 ### Fase 3: Integración con Google Calendar
 
-- Sincronización con calendarios institucionales
+- Sincronización con calendarios conectados por OAuth
 - Importación y exportación de eventos
 - OAuth 2.0
 - Asociación por centro de estudiantes o unidad
-- Evitar mezclar calendarios personales
+- Evitar mezclar calendarios personales no seleccionados
+
+Para partir no se requiere dominio institucional ni Google Workspace. La primera integración puede usar la cuenta Google personal autorizada por Kika, creando eventos e invitaciones desde Calendar. La estrategia completa está en [`docs/estrategia-google-sin-dominio.md`](docs/estrategia-google-sin-dominio.md).
 
 ### Fase 4: Multi-centro / multiunidad
 
@@ -236,6 +238,12 @@ El sistema debe poder avisar por:
 - notificación web
 - recordatorios internos
 
+La gestión de correos hereda la idea de Castel (plantillas y avisos), pero no el acoplamiento al webmail del hosting. En este proyecto la prioridad es:
+
+- primero invitaciones por Google Calendar
+- después Gmail API para avisos puntuales
+- SMTP solo si aparece un dominio o proveedor propio
+
 Más adelante podría extenderse a otros canales, pero no es requisito base.
 
 ### 10. Historial y auditoría
@@ -372,6 +380,9 @@ Rutas web disponibles en este corte:
 - `/`: login demo y entrada al tablero
 - `/login`: alias para el login
 - `/app`: alias preparado para el tablero
+- `/manifest.webmanifest`: manifiesto PWA
+- `/sw.js`: service worker base
+- `/offline`: pantalla offline
 
 Ejecutar tests y lint:
 
@@ -394,7 +405,8 @@ Por defecto se usa SQLite en `.local/kika_orbit.db` para desarrollo rapido. La b
 ## Integraciones que podrían necesitarse
 
 - Google Calendar API
-- SMTP
+- Gmail API para avisos opcionales
+- SMTP solo como proveedor alternativo futuro
 - almacenamiento de archivos para documentos Word
 - tareas programadas
 
@@ -411,6 +423,6 @@ Por defecto se usa SQLite en `.local/kika_orbit.db` para desarrollo rapido. La b
 
 La mejor ruta para Kika es:
 
-**web SaaS + Python + PostgreSQL + integración con Google Calendar + PWA opcional después**
+**web SaaS + Python + PostgreSQL + integración con Google Calendar + PWA progresiva**
 
 Eso deja el proyecto ordenado, escalable y con menos riesgo que partir con una mezcla de tecnologías sin necesidad.

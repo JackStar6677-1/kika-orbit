@@ -8,7 +8,11 @@
       name="description"
       content="Primer tablero web de Kika Orbit para coordinar calendarios universitarios, centros y espacios compartidos."
     />
-    <link rel="stylesheet" href="/assets/styles.css" />
+    <meta name="theme-color" content="#ff7a2f" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/assets/orbit-icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/assets/orbit-icon.svg" />
+    <link rel="stylesheet" href="/assets/styles.css?v=2" />
   </head>
   <body>
     <div class="ambient ambient-one"></div>
@@ -73,6 +77,11 @@
             <span>Soniditos</span>
             <button id="sound-toggle" type="button" aria-pressed="false">Activar</button>
           </div>
+          <div class="install-card">
+            <span>PWA</span>
+            <p>Instalable como acceso rapido mientras seguimos desarrollando.</p>
+            <button id="install-button" type="button" hidden>Instalar</button>
+          </div>
         </aside>
 
         <section class="workspace">
@@ -100,6 +109,10 @@
               <span>Conflictos</span>
               <strong class="gold">1</strong>
             </article>
+            <article>
+              <span>Feriados irrenunciables</span>
+              <strong id="metric-holidays">0</strong>
+            </article>
           </section>
 
           <div class="content-grid">
@@ -113,6 +126,7 @@
                   <span><i class="dot orange"></i> Centro</span>
                   <span><i class="dot violet"></i> Academia</span>
                   <span><i class="dot gold"></i> Espacio</span>
+                  <span><i class="dot red"></i> Irrenunciable</span>
                 </div>
               </div>
               <div class="weekdays" aria-hidden="true">
@@ -129,6 +143,19 @@
                 </div>
               </div>
               <div class="agenda-list" id="agenda-list"></div>
+              <div class="google-panel">
+                <span class="eyebrow">Correos sin dominio propio</span>
+                <h4>Google personal conectado</h4>
+                <p>
+                  Kika puede autorizar su Gmail/Calendar personal por OAuth. El sistema crea eventos
+                  e invita asistentes desde esa cuenta; no necesitamos Google Workspace para partir.
+                </p>
+                <ul>
+                  <li>Fase 1: invitaciones por Google Calendar.</li>
+                  <li>Fase 2: Gmail API solo para avisos necesarios.</li>
+                  <li>Fase 3: si aparece dominio institucional, cambiamos el proveedor sin rehacer la app.</li>
+                </ul>
+              </div>
             </aside>
           </div>
         </section>
@@ -173,6 +200,6 @@
         </form>
       </dialog>
     </main>
-    <script src="/assets/app.js" type="module"></script>
+    <script src="/assets/app.js?v=2" type="module"></script>
   </body>
 </html>

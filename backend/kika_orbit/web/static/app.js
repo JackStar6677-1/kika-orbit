@@ -5,14 +5,17 @@ const soundToggle = document.querySelector("#sound-toggle");
 const calendarGrid = document.querySelector("#calendar-grid");
 const agendaList = document.querySelector("#agenda-list");
 const metricEvents = document.querySelector("#metric-events");
+const metricHolidays = document.querySelector("#metric-holidays");
 const dialog = document.querySelector("#event-dialog");
 const eventForm = document.querySelector("#event-form");
 const newEventButton = document.querySelector("#new-event-button");
 const todayButton = document.querySelector("#today-button");
+const installButton = document.querySelector("#install-button");
 
 let soundEnabled = false;
 let audioContext;
 let organizationId;
+let deferredInstallPrompt;
 
 const fallbackEvents = [
   {
@@ -42,6 +45,7 @@ const fallbackEvents = [
 ];
 
 let events = [...fallbackEvents];
+let holidays = [];
 
 function getAudioContext() {
   audioContext ||= new AudioContext();
@@ -85,6 +89,14 @@ function eventDate(event) {
 }
 
 function formatTime(event) {
+  if (event.all_day) {
+    return eventDate(event).toLocaleDateString("es-CL", {
+      day: "2-digit",
+      month: "short",
+      weekday: "long",
+    });
+  }
+
   const start = eventDate(event);
   const end = new Date(event.ends_at);
   return `${start.toLocaleDateString("es-CL", {
@@ -125,6 +137,17 @@ function eventsForDay(day) {
   });
 }
 
+function dateKey(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function holidayForDay(day) {
+  return holidays.find((holiday) => holiday.date === dateKey(day));
+}
+
 function renderCalendar() {
   calendarGrid.replaceChildren();
   const today = new Date();
@@ -132,7 +155,10 @@ function renderCalendar() {
   buildMonthDays().forEach((day) => {
     const dayCard = document.createElement("article");
     dayCard.className = "calendar-day";
+    const holiday = holidayForDay(day);
     if (day.getMonth() !== 4) dayCard.classList.add("is-muted");
+    if (holiday) dayCard.classList.add("is-holiday");
+    if (holiday?.is_irrenunciable) dayCard.classList.add("is-irrenunciable");
     if (
       day.getFullYear() === today.getFullYear() &&
       day.getMonth() === today.getMonth() &&
@@ -147,6 +173,14 @@ function renderCalendar() {
       weekday: "short",
     })}</span>`;
     dayCard.append(dateNumber);
+
+    if (holiday && day.getMonth() === 4) {
+      const ribbon = document.createElement("span");
+      ribbon.className = `holiday-ribbon${holiday.is_irrenunciable ? " is-irrenunciable" : ""}`;
+      ribbon.title = holiday.label;
+      ribbon.textContent = holiday.is_irrenunciable ? "Irrenunciable" : holiday.label;
+      dayCard.append(ribbon);
+    }
 
     eventsForDay(day).forEach((event) => {
       const pill = document.createElement("button");
@@ -164,12 +198,26 @@ function renderCalendar() {
 function renderAgenda() {
   agendaList.replaceChildren();
 
-  events
+  const holidayItems = holidays
+    .filter((holiday) => holiday.date.startsWith("2026-05"))
+    .map((holiday) => ({
+      id: `holiday-${holiday.date}`,
+      title: holiday.label,
+      category: "holiday",
+      starts_at: `${holiday.date}T00:00:00-04:00`,
+      ends_at: `${holiday.date}T23:59:00-04:00`,
+      all_day: true,
+      description: holiday.is_irrenunciable
+        ? "Feriado irrenunciable adoptado desde la base Castel."
+        : "Feriado nacional adoptado desde la base Castel.",
+    }));
+
+  [...events, ...holidayItems]
     .toSorted((a, b) => eventDate(a) - eventDate(b))
     .slice(0, 6)
     .forEach((event, index) => {
       const item = document.createElement("article");
-      item.className = `agenda-item ${normalizeCategory(event.category)}`;
+      item.className = `agenda-item ${event.category === "holiday" ? "holiday" : normalizeCategory(event.category)}`;
       item.style.animationDelay = `${index * 45}ms`;
       item.innerHTML = `
         <strong>${event.title}</strong>
@@ -182,8 +230,20 @@ function renderAgenda() {
 
 function render() {
   metricEvents.textContent = String(events.length);
+  metricHolidays.textContent = String(holidays.filter((holiday) => holiday.is_irrenunciable).length);
   renderCalendar();
   renderAgenda();
+}
+
+async function hydrateHolidays() {
+  try {
+    const response = await fetch("/api/holidays?year=2026");
+    if (!response.ok) return;
+    holidays = await response.json();
+    render();
+  } catch {
+    render();
+  }
 }
 
 async function ensureDemoOrganization() {
@@ -295,5 +355,27 @@ eventForm.addEventListener("submit", async (event) => {
   render();
 });
 
+window.addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault();
+  deferredInstallPrompt = event;
+  installButton.hidden = false;
+});
+
+installButton.addEventListener("click", async () => {
+  if (!deferredInstallPrompt) return;
+  deferredInstallPrompt.prompt();
+  await deferredInstallPrompt.userChoice;
+  deferredInstallPrompt = undefined;
+  installButton.hidden = true;
+  chirp("gold");
+});
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js").catch(() => {});
+  });
+}
+
 render();
+hydrateHolidays();
 hydrateFromApi();

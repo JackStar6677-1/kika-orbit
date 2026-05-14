@@ -14,10 +14,12 @@ def test_web_home_loads() -> None:
     with TestClient(app) as client:
         response = client.get("/")
         styles_response = client.get("/assets/styles.css")
+        manifest_response = client.get("/manifest.webmanifest")
 
     assert response.status_code == 200
     assert "Kika Orbit" in response.text
     assert styles_response.status_code == 200
+    assert manifest_response.status_code == 200
 
 
 def test_create_organization_and_event() -> None:
@@ -49,3 +51,13 @@ def test_create_organization_and_event() -> None:
 
     assert event_response.status_code == 201
     assert event_response.json()["title"] == "Reunion centro de estudiantes"
+
+
+def test_chile_holidays_include_irrenunciables() -> None:
+    with TestClient(app) as client:
+        response = client.get("/api/holidays?year=2026")
+
+    assert response.status_code == 200
+    holidays = response.json()
+    labels = {item["label"] for item in holidays if item["is_irrenunciable"]}
+    assert {"Anio Nuevo", "Dia del Trabajador", "Independencia Nacional", "Navidad"} <= labels

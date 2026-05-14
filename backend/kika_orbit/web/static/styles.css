@@ -259,6 +259,7 @@ textarea:focus {
 .ghost-action,
 .nav-item,
 .sound-card button,
+.install-card button,
 .icon-button {
   border: 0;
   border-radius: 999px;
@@ -276,6 +277,7 @@ textarea:focus {
 
 .ghost-action,
 .sound-card button,
+.install-card button,
 .icon-button {
   padding: 0.9rem 1rem;
   border: 1px solid rgba(255, 255, 255, 0.14);
@@ -350,7 +352,8 @@ nav {
   color: var(--text);
 }
 
-.sound-card {
+.sound-card,
+.install-card {
   margin-top: auto;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 20px;
@@ -358,11 +361,28 @@ nav {
   background: rgba(255, 255, 255, 0.05);
 }
 
-.sound-card span {
+.install-card {
+  margin-top: 0;
+}
+
+.sound-card span,
+.install-card span {
   display: block;
   margin-bottom: 0.8rem;
   color: var(--gold);
   font-weight: 900;
+}
+
+.install-card p {
+  margin: 0 0 0.85rem;
+  color: var(--muted);
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+
+.sound-card button,
+.install-card button {
+  width: 100%;
 }
 
 .workspace {
@@ -396,7 +416,7 @@ nav {
 }
 
 .metrics {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .metrics article {
@@ -469,6 +489,10 @@ nav {
   background: var(--gold);
 }
 
+.dot.red {
+  background: #ff4d6d;
+}
+
 .weekdays,
 .calendar-grid {
   display: grid;
@@ -497,10 +521,18 @@ nav {
 }
 
 .calendar-day:hover,
-.calendar-day.today {
+.calendar-day.today,
+.calendar-day.is-holiday {
   border-color: rgba(255, 209, 102, 0.5);
   background: rgba(255, 209, 102, 0.08);
   transform: translateY(-2px);
+}
+
+.calendar-day.is-irrenunciable {
+  border-color: rgba(255, 77, 109, 0.62);
+  background:
+    linear-gradient(135deg, rgba(255, 77, 109, 0.16), rgba(255, 209, 102, 0.08)),
+    rgba(255, 255, 255, 0.055);
 }
 
 .calendar-day.is-muted {
@@ -536,6 +568,26 @@ nav {
   background: rgba(255, 209, 102, 0.2);
 }
 
+.holiday-ribbon {
+  display: block;
+  margin-top: 0.42rem;
+  border-radius: 10px;
+  padding: 0.36rem 0.45rem;
+  background: rgba(255, 209, 102, 0.14);
+  color: #ffe7a8;
+  font-size: 0.72rem;
+  font-weight: 900;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.holiday-ribbon.is-irrenunciable {
+  background: rgba(255, 77, 109, 0.18);
+  color: #ffc2cf;
+}
+
 .agenda-list {
   display: grid;
   gap: 0.8rem;
@@ -559,6 +611,10 @@ nav {
   border-left-color: var(--gold);
 }
 
+.agenda-item.holiday {
+  border-left-color: #ff4d6d;
+}
+
 .agenda-item strong,
 .agenda-item span,
 .agenda-item p {
@@ -575,6 +631,34 @@ nav {
 .agenda-item p {
   margin: 0;
   font-size: 0.9rem;
+}
+
+.google-panel {
+  margin-top: 1rem;
+  border: 1px solid rgba(255, 209, 102, 0.16);
+  border-radius: 22px;
+  padding: 1rem;
+  background:
+    linear-gradient(135deg, rgba(255, 122, 47, 0.12), rgba(143, 92, 255, 0.12)),
+    rgba(255, 255, 255, 0.05);
+}
+
+.google-panel h4 {
+  margin: 0.5rem 0;
+  font-size: 1.12rem;
+}
+
+.google-panel p,
+.google-panel li {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.google-panel ul {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0.8rem 0 0;
+  padding-left: 1.05rem;
 }
 
 .event-dialog {
@@ -663,9 +747,12 @@ nav {
   }
 
   .topbar,
-  .metrics,
   .split-fields {
     grid-template-columns: 1fr;
+  }
+
+  .metrics {
+    grid-template-columns: 1fr 1fr;
   }
 
   .top-actions {

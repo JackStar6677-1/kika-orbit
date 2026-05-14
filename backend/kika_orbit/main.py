@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from kika_orbit.api import centers, events, health, organizations
+from kika_orbit.api import centers, events, health, holidays, organizations
 from kika_orbit.database import init_database
 from kika_orbit.settings import get_settings
 from kika_orbit.web import STATIC_DIR
@@ -36,6 +36,7 @@ def create_app() -> FastAPI:
     app.include_router(organizations.router)
     app.include_router(centers.router)
     app.include_router(events.router)
+    app.include_router(holidays.router)
     return app
 
 

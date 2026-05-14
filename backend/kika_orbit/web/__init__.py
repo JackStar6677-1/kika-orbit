@@ -14,3 +14,18 @@ router = APIRouter(tags=["web"])
 @router.get("/app", include_in_schema=False)
 def home() -> FileResponse:
     return FileResponse(STATIC_DIR / "index.html")
+
+
+@router.get("/manifest.webmanifest", include_in_schema=False)
+def manifest() -> FileResponse:
+    return FileResponse(STATIC_DIR / "manifest.webmanifest", media_type="application/manifest+json")
+
+
+@router.get("/sw.js", include_in_schema=False)
+def service_worker() -> FileResponse:
+    return FileResponse(STATIC_DIR / "sw.js", media_type="text/javascript")
+
+
+@router.get("/offline", include_in_schema=False)
+def offline() -> FileResponse:
+    return FileResponse(STATIC_DIR / "offline.html")
