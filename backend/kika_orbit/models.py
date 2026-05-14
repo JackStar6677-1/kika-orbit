@@ -61,12 +61,21 @@ class User(TimestampMixin, Base):
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=new_id)
     organization_id: Mapped[str] = mapped_column(ForeignKey("organizations.id"), nullable=False)
     center_id: Mapped[str | None] = mapped_column(ForeignKey("centers.id"))
+    rut_hash: Mapped[str | None] = mapped_column(String(64), index=True)
+    rut_masked: Mapped[str | None] = mapped_column(String(20))
     email: Mapped[str] = mapped_column(String(254), nullable=False, index=True)
     display_name: Mapped[str] = mapped_column(String(180), nullable=False)
     role: Mapped[str] = mapped_column(String(40), nullable=False, default="viewer")
+    password_hash: Mapped[str | None] = mapped_column(String(255))
+    password_reset_token_hash: Mapped[str | None] = mapped_column(String(255))
+    password_reset_expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    last_login_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
 
-    __table_args__ = (Index("ix_users_org_email", "organization_id", "email", unique=True),)
+    __table_args__ = (
+        Index("ix_users_org_email", "organization_id", "email", unique=True),
+        Index("ix_users_org_rut_hash", "organization_id", "rut_hash", unique=True),
+    )
 
 
 class Space(TimestampMixin, Base):

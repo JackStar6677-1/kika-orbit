@@ -12,6 +12,10 @@ class Settings(BaseSettings):
     google_client_id: str = ""
     google_client_secret: str = ""
     google_redirect_uri: str = "http://localhost:8000/api/integrations/google/callback"
+    google_calendar_scopes: str = "https://www.googleapis.com/auth/calendar.events"
+    google_gmail_scopes: str = "https://www.googleapis.com/auth/gmail.send"
+    admin_roster_path: str = ".local/admin_roster.json"
+    admin_identity_pepper: str = "change-this-local-secret"
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
@@ -22,6 +26,11 @@ class Settings(BaseSettings):
     @property
     def is_local(self) -> bool:
         return self.environment.lower() in {"local", "dev", "development"}
+
+    @property
+    def google_scopes(self) -> list[str]:
+        scopes = f"{self.google_calendar_scopes},{self.google_gmail_scopes}"
+        return [scope.strip() for scope in scopes.split(",") if scope.strip()]
 
 
 @lru_cache

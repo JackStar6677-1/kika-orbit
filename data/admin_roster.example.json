@@ -1,0 +1,18 @@
+{
+  "admins": [
+    {
+      "rut": "11111111-1",
+      "email": "persona.demo@example.com",
+      "display_name": "Persona Demo",
+      "role": "admin",
+      "status": "active"
+    },
+    {
+      "rut": "22222222-2",
+      "email": "directiva.demo@example.com",
+      "display_name": "Directiva Demo",
+      "role": "editor",
+      "status": "needs_rut_confirmation"
+    }
+  ]
+}

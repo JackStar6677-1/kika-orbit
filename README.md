@@ -410,6 +410,10 @@ Por defecto se usa SQLite en `.local/kika_orbit.db` para desarrollo rapido. La b
 - almacenamiento de archivos para documentos Word
 - tareas programadas
 
+## Identidad de administradores
+
+El acceso administrativo se modela por RUT unico + correo asociado + rol. El RUT completo no debe subirse al repo publico; para desarrollo local va en `.local/admin_roster.json`, mientras que el ejemplo publico esta en `data/admin_roster.example.json`. Mas detalle en [`docs/identidad-admin-rut.md`](docs/identidad-admin-rut.md).
+
 ## Qué podrías pedirme después
 
 - Diseñar la base de datos

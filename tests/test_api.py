@@ -1,4 +1,6 @@
 from fastapi.testclient import TestClient
+from kika_orbit.domain.admin_roster import load_admin_roster
+from kika_orbit.domain.rut import is_valid_rut, mask_rut, normalize_rut
 from kika_orbit.main import app
 
 
@@ -61,3 +63,41 @@ def test_chile_holidays_include_irrenunciables() -> None:
     holidays = response.json()
     labels = {item["label"] for item in holidays if item["is_irrenunciable"]}
     assert {"Anio Nuevo", "Dia del Trabajador", "Independencia Nacional", "Navidad"} <= labels
+
+
+def test_rut_validation_and_masking() -> None:
+    assert normalize_rut("21.452.686-7") == "21452686-7"
+    assert is_valid_rut("21452686-7")
+    assert not is_valid_rut("21248704-2")
+    assert mask_rut("21452686-7") == "***686-7"
+
+
+def test_admin_roster_flags_invalid_ruts(tmp_path) -> None:
+    roster = tmp_path / "admins.json"
+    roster.write_text(
+        """
+        {
+          "admins": [
+            {
+              "rut": "21452686-7",
+              "email": "demo@example.com",
+              "display_name": "Demo",
+              "role": "admin"
+            },
+            {
+              "rut": "21248704-2",
+              "email": "invalid@example.com",
+              "display_name": "Invalid",
+              "role": "editor"
+            }
+          ]
+        }
+        """,
+        encoding="utf-8",
+    )
+
+    entries = load_admin_roster(roster, pepper="test-pepper")
+
+    assert entries[0].can_login
+    assert entries[1].status == "needs_rut_confirmation"
+    assert not entries[1].can_login
