@@ -1,71 +1,363 @@
-# RoomKeeper
+# Kika Orbit
 
-Calendario web privado para coordinar reservas, avisos y cambios de horario sin depender de un sitio vivo externo.
+Plataforma web tipo SaaS para centros de estudiantes y coordinación universitaria.
 
-## Qué incluye
+La idea central es convertir un calendario académico anual en un sistema vivo que permita cargar actividades de la universidad, sincronizar eventos institucionales y coordinar el uso de espacios sin mezclar información personal con información oficial.
 
-- Panel privado en `PHP` con calendario y control de acceso.
-- Reservas con propietario, auditoría y solicitudes de cambio.
-- Avisos por correo SMTP.
-- Soporte para backend `JSON` y evolución a `MySQL` / `MariaDB`.
-- Interfaz pensada para usarse como web, no como app instalada.
+## Nombre y marca
 
-## Estructura principal
+`Kika Orbit` es el nombre de trabajo del proyecto.
 
-```text
-RoomKeeper/
-├─ admin/
-│  ├─ auth.php
-│  ├─ calendar.php
-│  ├─ calendar_api.php
-│  ├─ calendar_app.js
-│  ├─ calendar_app_legacy.js
-│  ├─ calendar_legacy.php
-│  ├─ calendar_month_app.js
-│  ├─ calendar_store.php
-│  ├─ castel-theme.js
-│  ├─ editor.php
-│  ├─ mail_config.example.php
-│  ├─ mailer.php
-│  ├─ manifest.webmanifest
-│  ├─ offline.html
-│  ├─ pwa.js
-│  ├─ security.php
-│  ├─ sql.php
-│  └─ sw.js
-├─ data/
-│  ├─ authorized_emails.example.json
-│  ├─ calendar_backend.example.json
-│  ├─ calendar_notices.example.json
-│  ├─ calendar_store.example.json
-│  └─ site.example.json
-├─ docs/
-│  ├─ diseno-calendario-multiusuario-y-bloqueos.md
-│  └─ flujo-correos-calendario-privado.md
-└─ .gitignore
-```
+La identidad visual y el nombre público deben poder cambiarse sin rehacer la base técnica. La recomendación es centralizar eso en una sola capa de configuración cuando empecemos el desarrollo real:
 
-## Archivos runtime locales
+- nombre público
+- nombre corto
+- logo
+- colores
+- dominio
+- textos visibles
 
-Estos archivos se usan al correr el panel, pero se dejan fuera de git:
+Así, si Kika quiere cambiar la marca, venderlo a otra universidad o sacar una edición nueva, solo se ajusta la capa de branding y no todo el proyecto.
 
-- `admin/mail_config.php`
-- `data/authorized_emails.json`
-- `data/calendar_store.json`
-- `data/calendar_backend.json`
-- `data/calendar_notices.json`
-- `data/admin_login_locks.json`
-- `data/admin_tools.json`
-- `data/site.json`
+## Objetivo
 
-## Cómo partir en local
+Construir una web privada y multiusuario donde cada centro de estudiantes o unidad institucional pueda:
 
-1. Copia `admin/mail_config.example.php` a `admin/mail_config.php`.
-2. Copia `data/authorized_emails.example.json` a `data/authorized_emails.json`.
-3. Copia `data/calendar_store.example.json` a `data/calendar_store.json`.
-4. Crea los demás JSON runtime vacíos o con la configuración que necesites.
-5. Abre el panel dentro de un entorno PHP.
+- ver su calendario
+- crear y editar eventos autorizados
+- sincronizar actividades con Google Calendar
+- coordinar reservas de espacios como auditorios o salas
+- evitar que entren eventos personales de cuentas ajenas
+- compartir una vista común con otros centros y con la universidad
 
-## Nota sobre el seed de ejemplo
+El foco no es “una app más”, sino una herramienta de coordinación real para la universidad.
 
-El `authorized_emails.example.json` incluye usuarios ficticios para arrancar rápido. La contraseña de ejemplo usada para esos seeds es `Cambio123!`.
+## Decisión técnica recomendada
+
+### Recomendación principal
+
+**Backend:** Python  
+**Frontend:** web responsive con TypeScript/React o server-rendered templates según la primera fase  
+**Base de datos:** PostgreSQL  
+**Tareas en segundo plano:** workers Python + cron/celery/rq  
+**Integración externa:** Google Calendar API vía OAuth 2.0
+
+### Por qué Python
+
+- es fuerte para leer y transformar documentos Word, PDF y Excel
+- tiene buena compatibilidad con Google APIs
+- facilita tareas de automatización y procesamiento de calendarios
+- permite crecer a una arquitectura SaaS limpia sin inventar demasiadas piezas
+
+### Por qué no partir con una ensalada de lenguajes
+
+Se puede mezclar tecnología, pero solo donde haya una razón clara.  
+Para este proyecto, empezar con PHP + Python + Java + algo más al mismo tiempo solo agregaría:
+
+- más complejidad
+- más despliegues
+- más puntos de falla
+- más tiempo de mantenimiento
+
+La recomendación es:
+
+- una sola base principal
+- una sola base de datos
+- una sola API
+- una sola forma de autenticación
+
+## Stack propuesto por fases
+
+### Fase 1: MVP web
+
+- Web responsive
+- Login institucional por correo
+- Calendario por centro
+- Carga manual de eventos
+- Roles básicos
+- Base de datos PostgreSQL
+- Vista mensual y agenda
+
+### Fase 2: Importación de calendario académico
+
+- Subir documento Word del calendario anual
+- Extraer fechas y eventos
+- Detectar:
+  - inicio de semestre
+  - fin de semestre
+  - vacaciones
+  - feriados
+  - semanas de cátedras
+  - semanas especiales
+  - eventos institucionales
+- Permitir revisión antes de publicar
+
+### Fase 3: Integración con Google Calendar
+
+- Sincronización con calendarios institucionales
+- Importación y exportación de eventos
+- OAuth 2.0
+- Asociación por centro de estudiantes o unidad
+- Evitar mezclar calendarios personales
+
+### Fase 4: Multi-centro / multiunidad
+
+- Psicología
+- Veterinaria
+- Kinesiología
+- Enfermería
+- DAE u otros organismos
+
+Cada uno con su propio espacio lógico, colores, permisos y calendario.
+
+### Fase 5: SaaS completo
+
+- Panel administrador central
+- Gestión de organizaciones
+- Gestión de usuarios
+- Estadísticas
+- Historial
+- Auditoría
+- Plantillas de permisos
+- Reserva y coordinación de espacios
+
+## Requerimientos funcionales del proyecto
+
+### 1. Calendario anual dinámico
+
+El sistema debe permitir que el calendario académico cambie de año sin rehacer toda la aplicación.
+
+Requisitos:
+
+- cargar calendario anual nuevo
+- reutilizar estructura base
+- actualizar fechas automáticamente
+- mantener la información histórica
+
+### 2. Carga desde documento Word
+
+El documento base de la universidad será el punto de entrada principal.
+
+Debe poder:
+
+- subir Word como fuente inicial
+- identificar fechas y eventos
+- clasificar los elementos detectados
+- revisar y confirmar antes de publicar
+
+### 3. Aislamiento institucional
+
+No se deben mezclar datos personales con los institucionales.
+
+El sistema debe:
+
+- limitar acceso a cuentas autorizadas
+- usar correos institucionales o de centro
+- impedir que eventos personales aparezcan en el calendario común
+- separar eventos privados de eventos oficiales
+
+### 4. Calendarios por centro
+
+Cada centro debe tener su propio calendario lógico.
+
+Ejemplos:
+
+- Psicología
+- Veterinaria
+- Kinesiología
+- Enfermería
+
+Cada calendario debe poder:
+
+- verse solo por autorizados
+- compartir eventos públicos de coordinación
+- ocultar detalles sensibles si corresponde
+- tener color propio
+
+### 5. Vista común para coordinación
+
+Debe existir una vista central donde se vea:
+
+- qué centro tiene evento
+- qué espacio está ocupado
+- qué día se usa un auditorio
+- qué evento choca con otro
+
+Esto sirve para que centros y universidad coordinen mejor sus actividades.
+
+### 6. Reserva de espacios
+
+El proyecto no es solo calendario. También es coordinación de espacios.
+
+Debe incluir:
+
+- reservas de auditorio
+- reservas de salas
+- bloques horarios
+- disponibilidad visual
+- advertencia de choques
+
+### 7. Permisos y roles
+
+Roles mínimos:
+
+- superadmin
+- admin institucional
+- coordinación
+- centro de estudiantes
+- solo lectura
+
+Cada rol debe tener límites claros para:
+
+- crear eventos
+- editar eventos
+- aprobar cambios
+- ver todo
+- exportar
+- administrar usuarios
+
+### 8. Google Calendar
+
+La integración con Google Calendar es parte del proyecto.
+
+Debe contemplar:
+
+- OAuth 2.0
+- credenciales seguras
+- sincronización de eventos
+- asociación con calendarios institucionales
+- exportación/importación
+
+### 9. Notificaciones
+
+El sistema debe poder avisar por:
+
+- correo
+- notificación web
+- recordatorios internos
+
+Más adelante podría extenderse a otros canales, pero no es requisito base.
+
+### 10. Historial y auditoría
+
+Debe quedar registro de:
+
+- quién creó el evento
+- quién lo editó
+- quién aprobó el cambio
+- cuándo se publicó
+- qué cambió exactamente
+
+### 11. Estadísticas
+
+Deseable para fases posteriores:
+
+- uso de espacios
+- cantidad de eventos por centro
+- eventos por mes
+- espacios más ocupados
+
+## Requerimientos no funcionales
+
+- Debe verse bien en celular y escritorio
+- Debe cargar rápido
+- Debe funcionar con datos reales y con datos de prueba
+- Debe tener una arquitectura fácil de mantener
+- Debe ser segura con credenciales y tokens
+- Debe ser desplegable de forma simple mientras se desarrolla
+
+## Qué no debe hacer el MVP
+
+- No debe mezclar eventos personales con institucionales
+- No debe depender de una app nativa desde el inicio
+- No debe obligar a instalar nada para usarlo
+- No debe requerir varios lenguajes sin necesidad
+- No debe nacer con demasiadas integraciones al mismo tiempo
+
+## Ruta de desarrollo recomendada
+
+### Paso 1
+
+Diseñar la base funcional:
+
+- autenticación
+- base de datos
+- estructura de calendarios
+- roles
+- vista web
+
+### Paso 2
+
+Implementar el calendario anual dinámico:
+
+- importación manual
+- interpretación de fechas
+- publicación del calendario
+
+### Paso 3
+
+Agregar la coordinación de centros:
+
+- calendario por centro
+- vista común
+- reservas de espacios
+
+### Paso 4
+
+Integrar Google Calendar:
+
+- login OAuth
+- sincronización
+- publicación de eventos
+
+### Paso 5
+
+Escalar a SaaS:
+
+- organizaciones múltiples
+- métricas
+- auditoría completa
+- administración central
+
+## Diseño sugerido del producto
+
+- Web moderna
+- Responsive
+- Colores por centro
+- Interfaz clara para celular
+- Panel de administración separado
+- Calendario principal muy visible
+
+## Datos y base
+
+La base de datos debe ser SQL desde el inicio.
+
+Recomendación:
+
+- PostgreSQL
+- migraciones versionadas
+- tablas para usuarios, centros, calendarios, eventos, permisos, auditoría y sincronización
+
+## Integraciones que podrían necesitarse
+
+- Google Calendar API
+- SMTP
+- almacenamiento de archivos para documentos Word
+- tareas programadas
+
+## Qué podrías pedirme después
+
+- Diseñar la base de datos
+- Crear el árbol de carpetas del proyecto
+- Empezar el backend
+- Definir el flujo de importación de Word
+- Hacer la primera pantalla web
+- Preparar la integración con Google Calendar
+
+## Resumen de decisión
+
+La mejor ruta para Kika es:
+
+**web SaaS + Python + PostgreSQL + integración con Google Calendar + PWA opcional después**
+
+Eso deja el proyecto ordenado, escalable y con menos riesgo que partir con una mezcla de tecnologías sin necesidad.
