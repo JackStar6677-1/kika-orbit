@@ -3,10 +3,13 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from kika_orbit.api import centers, events, health, organizations
 from kika_orbit.database import init_database
 from kika_orbit.settings import get_settings
+from kika_orbit.web import STATIC_DIR
+from kika_orbit.web import router as web_router
 
 
 @asynccontextmanager
@@ -27,6 +30,8 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
+    app.mount("/assets", StaticFiles(directory=STATIC_DIR), name="assets")
+    app.include_router(web_router)
     app.include_router(health.router)
     app.include_router(organizations.router)
     app.include_router(centers.router)

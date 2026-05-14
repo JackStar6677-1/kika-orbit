@@ -10,6 +10,16 @@ def test_healthcheck() -> None:
     assert response.json()["status"] == "ok"
 
 
+def test_web_home_loads() -> None:
+    with TestClient(app) as client:
+        response = client.get("/")
+        styles_response = client.get("/assets/styles.css")
+
+    assert response.status_code == 200
+    assert "Kika Orbit" in response.text
+    assert styles_response.status_code == 200
+
+
 def test_create_organization_and_event() -> None:
     with TestClient(app) as client:
         organization_response = client.post(

@@ -341,6 +341,7 @@ Recomendación:
 ## Desarrollo local
 
 El backend inicial está en `backend/kika_orbit` y usa FastAPI + SQLAlchemy.
+La primera vista web vive en `backend/kika_orbit/web/static` y se sirve desde el mismo proceso para mantener el desarrollo simple.
 
 Instalar dependencias:
 
@@ -359,6 +360,18 @@ Verificar salud:
 ```powershell
 Invoke-RestMethod http://127.0.0.1:8000/api/health
 ```
+
+Abrir la interfaz:
+
+```text
+http://127.0.0.1:8000/
+```
+
+Rutas web disponibles en este corte:
+
+- `/`: login demo y entrada al tablero
+- `/login`: alias para el login
+- `/app`: alias preparado para el tablero
 
 Ejecutar tests y lint:
 
