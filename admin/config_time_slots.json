@@ -1,0 +1,26 @@
+{
+  "bloques_horarios": [
+    { "id": 1, "slot_id": "b1", "nombre": "Bloque 1", "hora_inicio": "08:00", "hora_fin": "09:30", "tipo": "clase", "es_bloqueado": false, "dia_semana": ["L", "M", "X", "J", "V"] },
+    { "id": 4, "slot_id": "r1", "nombre": "Recreo 1", "hora_inicio": "09:30", "hora_fin": "09:45", "tipo": "recreo", "es_bloqueado": true, "dia_semana": ["L", "M", "X", "J", "V"] },
+    { "id": 2, "slot_id": "b2", "nombre": "Bloque 2", "hora_inicio": "09:45", "hora_fin": "11:15", "tipo": "clase", "es_bloqueado": false, "dia_semana": ["L", "M", "X", "J", "V"] },
+    { "id": 5, "slot_id": "r2", "nombre": "Recreo 2", "hora_inicio": "11:15", "hora_fin": "11:30", "tipo": "recreo", "es_bloqueado": true, "dia_semana": ["L", "M", "X", "J", "V"] },
+    { "id": 3, "slot_id": "b3", "nombre": "Bloque 3", "hora_inicio": "11:30", "hora_fin": "13:00", "tipo": "clase", "es_bloqueado": false, "dia_semana": ["L", "M", "X", "J", "V"] },
+    { "id": 6, "slot_id": "a1", "nombre": "Almuerzo", "hora_inicio": "13:00", "hora_fin": "14:00", "tipo": "almuerzo", "es_bloqueado": true, "dia_semana": ["L", "M", "X", "J", "V"] },
+    { "id": 7, "slot_id": "b4", "nombre": "Bloque 4", "hora_inicio": "14:00", "hora_fin": "15:30", "tipo": "clase", "es_bloqueado": false, "dia_semana": ["L", "M", "X", "J", "V"] },
+    { "id": 9, "slot_id": "r3", "nombre": "Recreo 3", "hora_inicio": "15:30", "hora_fin": "15:45", "tipo": "recreo", "es_bloqueado": true, "dia_semana": ["L", "M", "X", "J", "V"] },
+    { "id": 8, "slot_id": "b5", "nombre": "Bloque 5", "hora_inicio": "15:45", "hora_fin": "17:15", "tipo": "clase", "es_bloqueado": false, "dia_semana": ["L", "M", "X", "J", "V"] }
+  ],
+  "jornada_ti": {
+    "dias_habiles": { "hora_salida": "17:30", "dias": [1, 2, 3, 4] },
+    "viernes": { "hora_salida": "16:35", "dias": [5] },
+    "mensaje": "Fuera de Horario Soporte"
+  },
+  "status_colors": {
+    "disponible": { "bg": "#2f8f62", "label": "Disponible", "css": "status-disponible" },
+    "reservada": { "bg": "#c66a2b", "label": "Reservada", "css": "status-reservada" },
+    "mantenimiento": { "bg": "#2f75d6", "label": "Mantención", "css": "status-mantenimiento" },
+    "bloqueada": { "bg": "#667085", "label": "Recreo/Almuerzo", "css": "status-bloqueada" }
+  },
+  "cursos": ["1° básico", "2° básico", "3° básico", "4° básico", "5° básico", "6° básico", "7° básico", "8° básico", "1° medio", "2° medio", "3° medio", "4° medio"],
+  "docente_default": "Pablo Elías Avendaño Miranda"
+}

@@ -3,7 +3,7 @@ require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/mailer.php';
 
 admin_bootstrap_session();
-admin_require_login();
+admin_require_maintenance_tools_enabled();
 
 $current_user = admin_current_user();
 $csrf_token = admin_csrf_token();

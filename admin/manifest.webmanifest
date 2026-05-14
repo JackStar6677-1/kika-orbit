@@ -1,0 +1,41 @@
+{
+  "name": "Calendario CCG",
+  "short_name": "Calendario CCG",
+  "description": "Acceso privado al calendario de salas de computacion del Colegio Castelgandolfo.",
+  "id": "/admin/calendar",
+  "start_url": "/admin/index.php?pwa=1&force_login=1",
+  "scope": "/admin/",
+  "display": "standalone",
+  "background_color": "#e4ecf5",
+  "theme_color": "#2C4C74",
+  "orientation": "portrait-primary",
+  "categories": ["education", "productivity"],
+  "icons": [
+    {
+      "src": "/admin/calendar-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/castel-app-icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/castel-app-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Abrir calendario",
+      "short_name": "Calendario",
+      "url": "/admin/index.php?pwa=1&force_login=1",
+      "description": "Entrar al calendario privado de salas."
+    }
+  ]
+}

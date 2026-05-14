@@ -1,7 +1,10 @@
 admin/mail_config.php
 data/authorized_emails.json
 data/calendar_store.json
+data/calendar_backend.json
+data/calendar_notices.json
+data/admin_login_locks.json
+data/admin_tools.json
 data/site.json
 *.log
 *.tmp
-

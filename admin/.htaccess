@@ -1,6 +1,23 @@
 # Protección de archivos sensibles del panel (Apache 2.4+)
+AddType application/manifest+json .webmanifest
+AddType image/svg+xml .svg
+AddType application/javascript .js
+
 <IfModule mod_authz_core.c>
     <Files "mail_config.php">
         Require all denied
     </Files>
+    <FilesMatch "\.(json|sql|bak|log|txt)$">
+        Require all denied
+    </FilesMatch>
+</IfModule>
+<IfModule !mod_authz_core.c>
+    <Files "mail_config.php">
+        Order allow,deny
+        Deny from all
+    </Files>
+    <FilesMatch "\.(json|sql|bak|log|txt)$">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
 </IfModule>

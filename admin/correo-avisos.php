@@ -2,7 +2,7 @@
 require_once __DIR__ . '/auth.php';
 
 admin_bootstrap_session();
-admin_require_login();
+admin_require_site_admin();
 
 $csrf_token = admin_csrf_token();
 $config = null;

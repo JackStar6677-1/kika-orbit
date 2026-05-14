@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Calendario CCG</title>
+  <desc id="desc">Icono del calendario privado del Colegio Castelgandolfo.</desc>
+  <defs>
+    <linearGradient id="bg" x1="72" x2="448" y1="52" y2="462" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#193657"/>
+      <stop offset="0.56" stop-color="#2c4c74"/>
+      <stop offset="1" stop-color="#4e8452"/>
+    </linearGradient>
+    <linearGradient id="paper" x1="104" x2="404" y1="128" y2="424" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#e7f0ec"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#06182a" flood-opacity=".32"/>
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="116" fill="url(#bg)"/>
+  <circle cx="404" cy="102" r="78" fill="#d6aa43" opacity=".24"/>
+  <circle cx="88" cy="418" r="118" fill="#6eb985" opacity=".16"/>
+  <g filter="url(#shadow)">
+    <rect x="104" y="116" width="304" height="302" rx="44" fill="url(#paper)"/>
+    <rect x="104" y="116" width="304" height="86" rx="44" fill="#d6aa43"/>
+    <path d="M104 160h304v58H104z" fill="#d6aa43"/>
+    <rect x="154" y="82" width="38" height="88" rx="19" fill="#eff6ff"/>
+    <rect x="320" y="82" width="38" height="88" rx="19" fill="#eff6ff"/>
+    <g fill="#2c4c74">
+      <rect x="148" y="248" width="54" height="46" rx="14"/>
+      <rect x="229" y="248" width="54" height="46" rx="14"/>
+      <rect x="310" y="248" width="54" height="46" rx="14"/>
+      <rect x="148" y="322" width="54" height="46" rx="14"/>
+      <rect x="229" y="322" width="54" height="46" rx="14"/>
+    </g>
+    <rect x="310" y="322" width="54" height="46" rx="14" fill="#4e8452"/>
+    <path d="M322 345l14 14 30-35" fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <path d="M162 448h188" stroke="#ffffff" stroke-width="18" stroke-linecap="round" opacity=".86"/>
+</svg>

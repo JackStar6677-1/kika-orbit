@@ -1,12 +1,12 @@
 <?php
+
 return array(
-    'host' => 'mail.example.com',
+    'host' => 'smtp.example.com',
     'port' => 465,
     'secure' => 'ssl',
-    'username' => 'notificaciones@example.com',
-    'password' => 'CHANGE_ME',
-    'from_email' => 'notificaciones@example.com',
-    'from_name' => 'Room Keeper',
-    'reply_to' => 'notificaciones@example.com',
+    'username' => 'avisos-web@example.com',
+    'password' => 'change-me',
+    'from_email' => 'avisos-web@example.com',
+    'from_name' => 'CastelRoomKeeper',
+    'reply_to' => 'avisos@example.com',
 );
-

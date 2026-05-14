@@ -406,6 +406,60 @@ function calendar_api_slot_config()
     );
 }
 
+function calendar_api_notice_path()
+{
+    return __DIR__ . '/../data/calendar_notices.json';
+}
+
+function calendar_api_calendar_notices()
+{
+    $path = calendar_api_notice_path();
+    if (!is_file($path)) {
+        return array();
+    }
+    $decoded = json_decode((string) file_get_contents($path), true);
+    if (!is_array($decoded)) {
+        return array();
+    }
+
+    $notices = array();
+    foreach ($decoded as $notice) {
+        if (!is_array($notice)) {
+            continue;
+        }
+        $times = array();
+        foreach (($notice['weekly_times'] ?? array()) as $row) {
+            if (!is_array($row)) {
+                continue;
+            }
+            $weekday = (int) ($row['weekday'] ?? 0);
+            $time = trim((string) ($row['time'] ?? ''));
+            if ($weekday < 1 || $weekday > 5 || $time === '') {
+                continue;
+            }
+            $times[] = array(
+                'weekday' => $weekday,
+                'weekday_label' => trim((string) ($row['weekday_label'] ?? '')),
+                'time' => $time,
+                'slot_hint' => trim((string) ($row['slot_hint'] ?? '')),
+            );
+        }
+        if (!$times) {
+            continue;
+        }
+        $notices[] = array(
+            'id' => trim((string) ($notice['id'] ?? '')),
+            'title' => trim((string) ($notice['title'] ?? 'Aviso')),
+            'subtitle' => trim((string) ($notice['subtitle'] ?? '')),
+            'audience' => trim((string) ($notice['audience'] ?? '')),
+            'room_note' => trim((string) ($notice['room_note'] ?? '')),
+            'weekly_times' => $times,
+        );
+    }
+
+    return $notices;
+}
+
 function calendar_api_in_month($date, $year, $month)
 {
     if (!calendar_is_valid_date_key($date)) {
@@ -515,6 +569,7 @@ if ($method === 'GET' && $action === 'load_blocks') {
         'pending_requests' => calendar_get_block_pending_requests($store, $user, $year, $room, $month),
         'custom_holidays_in_month' => $customHolidaysInMonth,
         'custom_holidays_for_year' => calendar_user_can_manage_holidays($user) ? $customHolidaysForYear : array(),
+        'calendar_notices' => calendar_api_calendar_notices(),
     ));
 }
 

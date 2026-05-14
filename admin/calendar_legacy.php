@@ -594,6 +594,7 @@ $csrf_token = admin_csrf_token();
                         <button type="button" class="theme-toggle" data-theme-toggle>Oscuro</button>
                         <a class="nav-link" href="/admin/editor.php">Panel</a>
                         <a class="nav-link nav-link--primary" href="/admin/calendar.php">Calendario</a>
+                        <a class="nav-link" href="/admin/sql.php">SQL / prueba</a>
                         <a class="nav-link" href="/app/" target="_blank" rel="noopener">Sitio público</a>
                         <a class="nav-link" href="/admin/index.php?logout=1">Cerrar sesión</a>
                     </div>
@@ -736,6 +737,7 @@ $csrf_token = admin_csrf_token();
                             <h3>Accesos</h3>
                             <a href="/admin/editor.php">Panel principal</a>
                             <a href="/admin/index.php?logout=1">Cerrar sesión</a>
+                            <a href="/admin/sql.php">SQL / prueba</a>
                             <a href="/app/" target="_blank" rel="noopener">Sitio público</a>
                         </section>
                         <section>

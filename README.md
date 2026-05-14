@@ -1,55 +1,44 @@
 # CastelRoomKeeper
 
-Calendario privado para laboratorios o salas de computación, pensado para colegios, equipos TI y coordinación académica.
+Base del calendario privado del Colegio Castelgandolfo. El repositorio quedó alineado con la versión que hoy corre en producción, para que podamos usarlo como punto de partida antes de construir el proyecto de Kika.
 
-El proyecto nació desde una necesidad real: organizar reservas por sala, evitar que un docente le pise el bloque a otro y dejar trazabilidad cuando alguien solicita cambiar una reserva ya tomada.
+## Qué hay hoy
 
-## Qué resuelve
+- Panel privado en `PHP` con calendario, reservas, avisos y control de acceso.
+- Lógica de usuarios autorizados por correo institucional.
+- Flujo de solicitudes de cambio y auditoría.
+- Soporte para backend `JSON` y evolución a `MySQL` / `MariaDB`.
+- PWA y archivos de interfaz que ya reflejan el estado actual de producción.
 
-- Reservas por sala y fecha con propietario real.
-- Bloqueo de edición sobre reservas ajenas.
-- Solicitudes de cambio en vez de sobreescritura directa.
-- Flujo de aprobación o rechazo por parte del dueño o de roles altos.
-- Notificaciones por correo vía SMTP.
-- Historial y auditoría básica de cambios.
-- Base inicial simple con almacenamiento JSON y bloqueo de archivo.
-
-## Casos de uso
-
-- Sala de computación de Básica.
-- Sala de computación de Media.
-- Laboratorios compartidos.
-- Espacios con alta demanda entre docentes o coordinadores.
-
-## Stack actual
-
-- `PHP`
-- `JavaScript`
-- `JSON` como almacenamiento inicial
-- `SMTP` para avisos automáticos
-
-## Estructura
+## Estructura principal
 
 ```text
 CastelRoomKeeper/
 ├─ admin/
 │  ├─ auth.php
-│  ├─ calendar.php              # Vista mensual por bloques (UI principal)
-│  ├─ calendar_month_app.js     # Cliente del calendario mensual
-│  ├─ calendar_api.php          # API JSON (reservas por bloque, correos HTML, feriados)
+│  ├─ calendar.php
+│  ├─ calendar_api.php
+│  ├─ calendar_app.js
+│  ├─ calendar_app_legacy.js
+│  ├─ calendar_legacy.php
+│  ├─ calendar_month_app.js
 │  ├─ calendar_store.php
-│  ├─ calendar_app.js           # Cliente legado por semestre (referencia / despliegue antiguo)
-│  ├─ calendar_legacy.php       # Página PHP legada opcional
-│  ├─ index.php, editor.php     # Login y configuración del sitio (logo, etc.)
-│  ├─ correo-avisos.php, mail-test-calendar.php
-│  ├─ includes/admin_sidebar.php
-│  ├─ mailer.php
+│  ├─ castel-theme.js
+│  ├─ editor.php
 │  ├─ mail_config.example.php
-│  └─ .htaccess
+│  ├─ mailer.php
+│  ├─ manifest.webmanifest
+│  ├─ offline.html
+│  ├─ pwa.js
+│  ├─ security.php
+│  ├─ sql.php
+│  └─ sw.js
 ├─ data/
 │  ├─ authorized_emails.example.json
+│  ├─ calendar_backend.example.json
+│  ├─ calendar_notices.example.json
 │  ├─ calendar_store.example.json
-│  └─ site.example.json         # Ejemplo para editor (logo institucional, URL)
+│  └─ site.example.json
 ├─ docs/
 │  ├─ diseno-calendario-multiusuario-y-bloqueos.md
 │  └─ flujo-correos-calendario-privado.md
@@ -57,64 +46,31 @@ CastelRoomKeeper/
 └─ README.md
 ```
 
-## Cómo funciona
+## Archivos runtime locales
 
-1. Un usuario autorizado entra al panel.
-2. En la vista mensual elige sala, día y **bloque horario** (cada franja tiene propietario).
-3. La reserva queda asociada a su cuenta.
-4. Otro usuario no puede reemplazarla directamente.
-5. Si necesita ese bloque, crea una solicitud de cambio.
-6. El dueño original o un rol superior aprueba o rechaza.
-7. El sistema puede enviar correos automáticos según el evento.
+Estos archivos se usan al correr el panel, pero se dejan fuera de git:
 
-## Roles pensados
+- `admin/mail_config.php`
+- `data/authorized_emails.json`
+- `data/calendar_store.json`
+- `data/calendar_backend.json`
+- `data/calendar_notices.json`
+- `data/admin_login_locks.json`
+- `data/admin_tools.json`
+- `data/site.json`
 
-- `profesor`
-- `coordinacion`
-- `directivo`
-- `admin`
-
-## Qué incluye el repo
-
-- La base del calendario privado.
-- La lógica de propiedad de reserva.
-- El flujo de solicitudes de cambio.
-- El envío de correos por SMTP.
-- Archivos de ejemplo para configuración y usuarios.
-
-## Qué no incluye
-
-- Contraseñas reales.
-- Correos institucionales reales.
-- Branding final de una institución específica.
-- Configuración de producción.
-
-## Puesta en marcha
+## Cómo partir en local
 
 1. Copia `admin/mail_config.example.php` a `admin/mail_config.php`.
-2. Completa tu servidor SMTP.
-3. Copia `data/authorized_emails.example.json` a `data/authorized_emails.json`.
-4. Ajusta textos, logo y rutas del panel.
-5. Publica el contenido en un entorno PHP.
+2. Copia `data/authorized_emails.example.json` a `data/authorized_emails.json`.
+3. Copia `data/calendar_store.example.json` a `data/calendar_store.json`.
+4. Crea los demás JSON runtime vacíos o con la configuración que necesites.
+5. Abre el panel dentro de un entorno PHP.
 
-## Evolución recomendada
+## Nota sobre el seed de ejemplo
 
-La versión actual es ideal para un primer despliegue interno. Cuando el uso crezca, la mejora natural es migrar el almacenamiento desde JSON a `MySQL` o `MariaDB` para obtener:
+El `authorized_emails.example.json` incluye usuarios ficticios para arrancar rápido. La contraseña de ejemplo usada para esos seeds es `Cambio123!`.
 
-- concurrencia más sólida
-- consultas más rápidas
-- historial más robusto
-- administración multiusuario más confiable
+## Próximo paso
 
-## Roadmap sugerido
-
-- Migración a base de datos.
-- Panel de administración de usuarios.
-- Calendario por bloques horarios.
-- Exportación institucional.
-- Tokens seguros para aprobar cambios desde correo.
-- Integración con calendario académico y feriados.
-
-## Licencia
-
-MIT
+Con esta base ya sincronizada, el siguiente proyecto puede ser el de Kika sin arrastrar la versión vieja del calendario.

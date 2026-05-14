@@ -2,7 +2,7 @@
 require_once __DIR__ . '/auth.php';
 
 admin_bootstrap_session();
-admin_require_login();
+admin_require_site_admin();
 
 $site_file = '../data/site.json';
 $site_data = json_decode(file_get_contents($site_file), true);

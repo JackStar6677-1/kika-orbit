@@ -25,13 +25,15 @@ if (is_file($mail_cfg_path)) {
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
     <title>Calendario Sala de Computación | CCG Admin</title>
     <meta name="theme-color" content="#2C4C74">
+    <meta name="application-name" content="Calendario CCG">
+    <meta name="apple-mobile-web-app-title" content="Calendario CCG">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="manifest" href="/admin/manifest.webmanifest">
+    <link rel="icon" href="/admin/calendar-icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/assets/castel-app-icon.png">
+    <script src="castel-theme.js"></script>
     <script>
-        (function () {
-            try {
-                var storedTheme = localStorage.getItem('castel-theme');
-                document.documentElement.setAttribute('data-theme', storedTheme || 'dark');
-            } catch (error) {}
-        })();
         window.CASTEL_CALENDAR_BOOT = {
             csrfToken: <?php echo json_encode($csrf_token, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>,
             mailReplyTo: <?php echo json_encode($cal_mail_reply, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>,
@@ -83,23 +85,54 @@ if (is_file($mail_cfg_path)) {
 
         * { box-sizing: border-box; }
         html, body { margin: 0; padding: 0; overflow-x: hidden; }
+        html { background: #e8eff0; }
         body {
+            position: relative;
             font-family: 'Outfit', sans-serif;
             color: var(--ink);
             background:
-                radial-gradient(circle at 12% 10%, rgba(123, 196, 255, 0.2), transparent 18%),
-                radial-gradient(circle at 85% 8%, rgba(214, 170, 67, 0.14), transparent 18%),
-                radial-gradient(circle at 78% 52%, rgba(28, 154, 138, 0.12), transparent 22%),
-                linear-gradient(180deg, #e4ecf5 0%, #dfe8f0 38%, #e2ebe4 100%);
+                radial-gradient(circle at 12% 8%, rgba(93, 139, 181, 0.16), transparent 20%),
+                radial-gradient(circle at 86% 10%, rgba(214, 170, 67, 0.12), transparent 20%),
+                radial-gradient(circle at 78% 56%, rgba(78, 132, 82, 0.1), transparent 24%),
+                linear-gradient(180deg, #eaf1f2 0%, #dfe9ea 44%, #e6eee7 100%);
             min-height: 100vh;
+        }
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            z-index: -1;
+            pointer-events: none;
+            border-radius: 999px;
+            filter: blur(28px);
+            opacity: 0.6;
+            transform: translateZ(0);
+        }
+        body::before {
+            width: 42vw;
+            height: 42vw;
+            left: -14vw;
+            top: 18vh;
+            background: radial-gradient(circle, rgba(78,132,82,.2), transparent 62%);
+            animation: pageGlowOne 16s ease-in-out infinite alternate;
+        }
+        body::after {
+            width: 38vw;
+            height: 38vw;
+            right: -12vw;
+            top: 8vh;
+            background: radial-gradient(circle, rgba(44,76,116,.18), transparent 62%);
+            animation: pageGlowTwo 18s ease-in-out infinite alternate;
         }
         :root[data-theme="dark"] body {
             background:
-                radial-gradient(circle at 12% 10%, rgba(123, 196, 255, 0.12), transparent 18%),
-                radial-gradient(circle at 85% 8%, rgba(214, 170, 67, 0.08), transparent 18%),
-                radial-gradient(circle at 78% 52%, rgba(28, 154, 138, 0.1), transparent 22%),
-                linear-gradient(180deg, #08111c 0%, #0b1a28 42%, #0c1824 100%);
+                radial-gradient(circle at 12% 10%, rgba(123, 196, 255, 0.1), transparent 18%),
+                radial-gradient(circle at 85% 8%, rgba(214, 170, 67, 0.07), transparent 18%),
+                radial-gradient(circle at 78% 52%, rgba(78, 132, 82, 0.09), transparent 22%),
+                linear-gradient(180deg, #0a1420 0%, #0d1c2a 46%, #0b1722 100%);
         }
+        :root[data-theme="dark"] body::before { background: radial-gradient(circle, rgba(78,132,82,.12), transparent 62%); }
+        :root[data-theme="dark"] body::after { background: radial-gradient(circle, rgba(123,196,255,.11), transparent 62%); }
 
         .container {
             width: min(100%, var(--site-width));
@@ -124,13 +157,15 @@ if (is_file($mail_cfg_path)) {
             padding: 12px 18px;
             min-height: 84px;
             border-radius: 999px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.88), rgba(235,244,238,0.7));
-            border: 1px solid rgba(255,255,255,0.8);
-            box-shadow: var(--shadow-md);
+            background:
+                linear-gradient(135deg, rgba(238,245,245,0.9), rgba(220,232,229,0.72)),
+                radial-gradient(circle at 0% 0%, rgba(255,255,255,.8), transparent 40%);
+            border: 1px solid rgba(255,255,255,0.68);
+            box-shadow: 0 18px 42px rgba(44, 76, 116, 0.12);
             backdrop-filter: blur(18px);
         }
         :root[data-theme="dark"] .site-header__bar {
-            background: linear-gradient(135deg, rgba(11, 29, 50, 0.92), rgba(15, 49, 69, 0.78));
+            background: linear-gradient(135deg, rgba(12, 29, 46, 0.92), rgba(16, 42, 58, 0.78));
             border-color: rgba(148,196,255,0.12);
         }
 
@@ -146,6 +181,13 @@ if (is_file($mail_cfg_path)) {
             height: 58px;
             width: auto;
             display: block;
+        }
+        :root[data-theme="dark"] .site-logo img {
+            background: #f0f4f8;
+            border-radius: 14px;
+            padding: 5px 7px;
+            box-sizing: content-box;
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.22) inset;
         }
         .site-logo__meta { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
         .site-logo__eyebrow {
@@ -167,6 +209,22 @@ if (is_file($mail_cfg_path)) {
             flex-wrap: wrap;
             justify-content: flex-end;
         }
+        .mobile-menu-toggle {
+            display: none;
+            border: 1px solid rgba(44, 76, 116, 0.12);
+            border-radius: 999px;
+            padding: 10px 14px;
+            font: inherit;
+            font-weight: 800;
+            color: var(--ink);
+            background: rgba(255,255,255,.54);
+            cursor: pointer;
+        }
+        :root[data-theme="dark"] .mobile-menu-toggle {
+            color: #eef6ff;
+            background: rgba(123,196,255,.08);
+            border-color: rgba(148,196,255,.18);
+        }
         .theme-toggle,
         .nav-link {
             border: 0;
@@ -186,7 +244,22 @@ if (is_file($mail_cfg_path)) {
         }
         .theme-toggle:hover,
         .nav-link:hover { transform: translateY(-1px); background: rgba(27, 130, 82, 0.12); }
-        .nav-link--primary { background: linear-gradient(135deg, var(--forest), var(--teal)); color: #fff; }
+        .nav-link--primary { background: linear-gradient(135deg, #4E8452, #3d7351); color: #fff; }
+        .nav-link--primary,
+        .theme-fab {
+            position: relative;
+            overflow: hidden;
+        }
+        .nav-link--primary::after,
+        .theme-fab::after {
+            content: "";
+            position: absolute;
+            inset: -40% auto -40% -60%;
+            width: 40%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,.34), transparent);
+            transform: rotate(18deg);
+            animation: buttonSheen 4.8s ease-in-out infinite;
+        }
         .theme-fab {
             position: fixed;
             right: 18px;
@@ -250,14 +323,16 @@ if (is_file($mail_cfg_path)) {
         .surface {
             margin-top: 16px;
             padding: clamp(18px, 3vw, 30px);
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(228, 236, 246, 0.9));
-            border: 1px solid rgba(44, 76, 116, 0.14);
+            background:
+                linear-gradient(180deg, rgba(232,239,240,0.84), rgba(216,228,227,0.78)),
+                radial-gradient(circle at 8% 0%, rgba(255,255,255,.75), transparent 34%);
+            border: 1px solid rgba(44, 76, 116, 0.1);
             border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-lg);
+            box-shadow: 0 18px 44px rgba(44, 76, 116, 0.12);
             backdrop-filter: blur(18px);
         }
         :root[data-theme="dark"] .surface {
-            background: linear-gradient(180deg, rgba(14, 32, 52, 0.94), rgba(8, 20, 36, 0.92));
+            background: linear-gradient(180deg, rgba(14, 31, 49, 0.9), rgba(8, 20, 34, 0.9));
             border-color: var(--line);
         }
 
@@ -530,11 +605,18 @@ if (is_file($mail_cfg_path)) {
         }
 
         .calendar-surface-single {
-            background: linear-gradient(180deg, rgba(195, 210, 228, 0.72), rgba(168, 188, 212, 0.58));
-            border: 1px solid rgba(44, 76, 116, 0.16);
+            background:
+                linear-gradient(180deg, rgba(226,236,236,.88), rgba(211,225,223,.82)),
+                radial-gradient(circle at 10% 10%, rgba(78,132,82,.14), transparent 28%),
+                radial-gradient(circle at 92% 0%, rgba(44,76,116,.14), transparent 24%),
+                repeating-linear-gradient(135deg, rgba(44,76,116,.025) 0 1px, transparent 1px 10px);
+            border: 1px solid rgba(44, 76, 116, 0.12);
         }
         :root[data-theme="dark"] .calendar-surface-single {
-            background: linear-gradient(180deg, rgba(8, 20, 38, 0.96), rgba(4, 12, 26, 0.94));
+            background:
+                linear-gradient(180deg, rgba(14,31,49,.9), rgba(7,18,31,.94)),
+                radial-gradient(circle at 12% 12%, rgba(78,132,82,.11), transparent 28%),
+                radial-gradient(circle at 92% 0%, rgba(123,196,255,.09), transparent 24%);
             border-color: rgba(123, 196, 255, 0.14);
         }
         .calendar-page-lead {
@@ -552,6 +634,27 @@ if (is_file($mail_cfg_path)) {
             max-width: 72ch;
             color: var(--muted);
             line-height: 1.55;
+        }
+        @keyframes pageGlowOne {
+            from { transform: translate3d(0, 0, 0) scale(1); }
+            to { transform: translate3d(24px, -18px, 0) scale(1.08); }
+        }
+        @keyframes pageGlowTwo {
+            from { transform: translate3d(0, 0, 0) scale(1); }
+            to { transform: translate3d(-22px, 24px, 0) scale(1.05); }
+        }
+        @keyframes buttonSheen {
+            0%, 55% { left: -70%; opacity: 0; }
+            68% { opacity: 1; }
+            100% { left: 130%; opacity: 0; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            body::before,
+            body::after,
+            .nav-link--primary::after,
+            .theme-fab::after {
+                animation: none !important;
+            }
         }
         .calendar-month-mount {
             width: 100%;
@@ -605,15 +708,42 @@ if (is_file($mail_cfg_path)) {
                 min-height: auto;
                 padding: 12px 14px;
                 border-radius: 24px;
-                flex-direction: column;
-                align-items: stretch;
+                display: grid;
+                grid-template-columns: 1fr auto;
+                align-items: center;
             }
             .site-logo img { height: 48px; }
-            .site-actions { gap: 8px; }
+            .site-logo__eyebrow { font-size: 0.68rem; }
+            .site-logo__name { font-size: 0.98rem; }
+            .mobile-menu-toggle { display: inline-flex; align-items: center; justify-content: center; }
+            .site-actions {
+                grid-column: 1 / -1;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+                max-height: 0;
+                overflow: hidden;
+                opacity: 0;
+                transform: translateY(-4px);
+                pointer-events: none;
+                transition: max-height .24s ease, opacity .2s ease, transform .2s ease;
+            }
+            .site-header__bar.is-menu-open .site-actions {
+                max-height: 360px;
+                opacity: 1;
+                transform: translateY(0);
+                pointer-events: auto;
+                padding-top: 10px;
+            }
             .nav-link,
             .button { width: 100%; justify-content: center; }
-            .page-hero { padding: 28px 18px; border-radius: 24px; }
-            .surface { padding: 18px 14px; border-radius: 24px; }
+            main { padding: 8px 0 42px; }
+            .page-hero { display: none; }
+            .calendar-surface-single { margin-top: 8px; }
+            .calendar-page-lead { margin-bottom: 10px; }
+            .calendar-page-lead__title { font-size: clamp(1.35rem, 8vw, 1.95rem); }
+            .calendar-page-lead__text { display: none; }
+            .surface { padding: 12px 10px; border-radius: 20px; }
             .week summary,
             .week__body { padding-left: 14px; padding-right: 14px; }
             .day-card__meta { flex-direction: column; }
@@ -636,11 +766,15 @@ if (is_file($mail_cfg_path)) {
                         </span>
                     </a>
 
+                    <button type="button" class="mobile-menu-toggle" data-admin-menu-toggle aria-expanded="false">Menú</button>
+
                     <div class="site-actions">
                         <button type="button" class="theme-toggle" data-theme-toggle>Oscuro</button>
+                        <button type="button" class="nav-link" data-pwa-install hidden>Instalar app</button>
                         <a class="nav-link" href="/admin/editor.php">Panel</a>
                         <a class="nav-link nav-link--primary" href="/admin/calendar.php">Calendario</a>
                         <a class="nav-link" href="/admin/correo-avisos.php">Correo / avisos</a>
+                        <a class="nav-link" href="/admin/sql.php">SQL / prueba</a>
                         <a class="nav-link" href="/app/" target="_blank" rel="noopener">Sitio público</a>
                         <a class="nav-link" href="/admin/index.php?logout=1">Cerrar sesión</a>
                     </div>
@@ -679,6 +813,7 @@ if (is_file($mail_cfg_path)) {
                             <h3>Accesos</h3>
                             <a href="/admin/editor.php">Panel principal</a>
                             <a href="/admin/correo-avisos.php">Correo / avisos</a>
+                            <a href="/admin/sql.php">SQL / prueba</a>
                             <a href="/admin/index.php?logout=1">Cerrar sesión</a>
                             <a href="/app/" target="_blank" rel="noopener">Sitio público</a>
                         </section>
@@ -697,6 +832,31 @@ if (is_file($mail_cfg_path)) {
     </div>
 
     <button type="button" class="theme-fab" data-theme-toggle>Oscuro</button>
-    <script src="/admin/calendar_month_app.js"></script>
+    <script src="/admin/calendar_month_app.js?v=11"></script>
+    <script src="/admin/pwa.js" defer></script>
+    <script>
+        (function () {
+            var g = window.CASTEL_SCHEDULED_THEME;
+            if (!g || typeof g.applyToDom !== 'function') return;
+            document.querySelectorAll('[data-theme-toggle]').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    var cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+                    g.applyToDom(cur === 'dark' ? 'light' : 'dark', true);
+                });
+            });
+            g.updateToggleElements(document.documentElement.getAttribute('data-theme') || 'light');
+
+            var menuToggle = document.querySelector('[data-admin-menu-toggle]');
+            var headerBar = document.querySelector('.site-header__bar');
+            if (menuToggle && headerBar) {
+                menuToggle.addEventListener('click', function () {
+                    var open = !headerBar.classList.contains('is-menu-open');
+                    headerBar.classList.toggle('is-menu-open', open);
+                    menuToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+                    menuToggle.textContent = open ? 'Cerrar' : 'Menú';
+                });
+            }
+        })();
+    </script>
 </body>
 </html>

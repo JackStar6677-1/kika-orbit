@@ -1,11 +1,18 @@
 {
-    "version": 1,
+    "version": 2,
     "meta": {
         "last_reservation_id": 0,
-        "last_change_request_id": 0
+        "last_change_request_id": 0,
+        "last_block_id": 0,
+        "last_block_change_request_id": 0,
+        "last_incidence_id": 0
     },
-    "reservations": {},
-    "custom_holidays": {},
+    "reservations": [],
+    "custom_holidays": [],
     "change_requests": [],
+    "block_reservations": [],
+    "block_change_requests": [],
+    "course_rosters": [],
+    "incidences": [],
     "audit_log": []
 }

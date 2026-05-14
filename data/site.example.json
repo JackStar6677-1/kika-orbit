@@ -1,6 +1,5 @@
 {
-    "name": "Mi colegio o institución",
-    "description": "",
-    "url": "https://ejemplo.edu",
-    "logo_url": "https://ejemplo.edu/app/assets/logo.png"
+    "name": "Colegio Castelgandolfo",
+    "description": "Panel de ejemplo del calendario privado.",
+    "logo_url": ""
 }
