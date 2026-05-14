@@ -338,6 +338,46 @@ Recomendación:
 - migraciones versionadas
 - tablas para usuarios, centros, calendarios, eventos, permisos, auditoría y sincronización
 
+## Desarrollo local
+
+El backend inicial está en `backend/kika_orbit` y usa FastAPI + SQLAlchemy.
+
+Instalar dependencias:
+
+```powershell
+uv sync
+```
+
+Levantar API local:
+
+```powershell
+uv run uvicorn kika_orbit.main:app --app-dir backend --reload
+```
+
+Verificar salud:
+
+```powershell
+Invoke-RestMethod http://127.0.0.1:8000/api/health
+```
+
+Ejecutar tests y lint:
+
+```powershell
+uv run ruff check .
+uv run pytest
+```
+
+Por defecto se usa SQLite en `.local/kika_orbit.db` para desarrollo rapido. La base objetivo del producto sigue siendo PostgreSQL; se configura cambiando `DATABASE_URL` en `.env`.
+
+## Metodologia de trabajo
+
+- cambios pequeños y verificables
+- tests antes de subir
+- SQL como fuente real de datos
+- secretos fuera de git
+- marca configurable desde una capa central
+- integraciones externas por fases, no todas al mismo tiempo
+
 ## Integraciones que podrían necesitarse
 
 - Google Calendar API

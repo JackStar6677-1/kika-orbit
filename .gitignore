@@ -8,3 +8,10 @@ data/admin_tools.json
 data/site.json
 *.log
 *.tmp
+.env
+.venv/
+.local/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+*.pyc
