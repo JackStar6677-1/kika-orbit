@@ -1,6 +1,6 @@
 /**
  * Layout fluido para páginas del panel con sidebar (editor, correo, pruebas SMTP).
- * El calendario público /app/ suele vivir en otro árbol (p. ej. WordPress); allí
+ * El sitio público suele vivir en otro árbol; aquí solo se ajusta el panel privado.
  * conviene reutilizar la misma idea: contenedor fluido + media queries.
  */
 * {

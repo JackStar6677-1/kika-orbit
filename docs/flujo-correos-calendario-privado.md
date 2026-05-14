@@ -83,7 +83,7 @@ Pero la acción de aprobar o rechazar **no se hace desde el correo**.
 
 La aprobación sigue ocurriendo dentro del panel:
 
-- `https://www.colegiocastelgandolfo.cl/admin/calendar.php`
+- `/admin/calendar.php`
 
 ## Por qué se dejó así
 
@@ -108,7 +108,7 @@ Pero eso requiere una segunda capa de seguridad.
 
 El sistema intenta enviar con `mail()` de PHP y cabeceras tipo:
 
-- remitente por defecto: `avisos-web@colegiocastelgandolfo.cl`
+- remitente por defecto: `avisos@example.com`
 
 Esto puede mejorarse después si se quiere:
 

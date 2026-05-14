@@ -1,11 +1,9 @@
-const CACHE_NAME = 'ccg-admin-calendar-pwa-v9';
+const CACHE_NAME = 'roomkeeper-admin-calendar-pwa-v1';
 const STATIC_ASSETS = [
   '/admin/offline.html',
   '/admin/calendar-icon.svg',
   '/admin/calendar_month_app.js?v=11',
-  '/admin/castel-theme.js',
-  '/assets/LogoCastelGandolfoSinFondo.png',
-  '/assets/castel-app-icon.png'
+  '/admin/castel-theme.js'
 ];
 
 function isPrivateAdminRequest(url) {

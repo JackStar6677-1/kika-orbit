@@ -1,5 +1,5 @@
 -- Esquema actualizado para reservas por bloque (reemplaza reservas_por_dia)
--- CCG Admin - Colegio Castelgandolfo
+-- RoomKeeper - calendario privado
 
 -- Tabla: bloques_horarios (malla horaria del colegio)
 CREATE TABLE IF NOT EXISTS bloques_horarios (

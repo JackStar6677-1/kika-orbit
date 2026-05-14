@@ -1,19 +1,19 @@
-# CastelRoomKeeper
+# RoomKeeper
 
-Base del calendario privado del Colegio Castelgandolfo. El repositorio quedó alineado con la versión que hoy corre en producción, para que podamos usarlo como punto de partida antes de construir el proyecto de Kika.
+Calendario web privado para coordinar reservas, avisos y cambios de horario sin depender de un sitio vivo externo.
 
-## Qué hay hoy
+## Qué incluye
 
-- Panel privado en `PHP` con calendario, reservas, avisos y control de acceso.
-- Lógica de usuarios autorizados por correo institucional.
-- Flujo de solicitudes de cambio y auditoría.
+- Panel privado en `PHP` con calendario y control de acceso.
+- Reservas con propietario, auditoría y solicitudes de cambio.
+- Avisos por correo SMTP.
 - Soporte para backend `JSON` y evolución a `MySQL` / `MariaDB`.
-- PWA y archivos de interfaz que ya reflejan el estado actual de producción.
+- Interfaz pensada para usarse como web, no como app instalada.
 
 ## Estructura principal
 
 ```text
-CastelRoomKeeper/
+RoomKeeper/
 ├─ admin/
 │  ├─ auth.php
 │  ├─ calendar.php
@@ -42,8 +42,7 @@ CastelRoomKeeper/
 ├─ docs/
 │  ├─ diseno-calendario-multiusuario-y-bloqueos.md
 │  └─ flujo-correos-calendario-privado.md
-├─ .gitignore
-└─ README.md
+└─ .gitignore
 ```
 
 ## Archivos runtime locales
@@ -70,7 +69,3 @@ Estos archivos se usan al correr el panel, pero se dejan fuera de git:
 ## Nota sobre el seed de ejemplo
 
 El `authorized_emails.example.json` incluye usuarios ficticios para arrancar rápido. La contraseña de ejemplo usada para esos seeds es `Cambio123!`.
-
-## Próximo paso
-
-Con esta base ya sincronizada, el siguiente proyecto puede ser el de Kika sin arrastrar la versión vieja del calendario.
